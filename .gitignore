@@ -1,2 +1,4 @@
 messaging-app-frontend/node_modules
 messaging-app-backend/node_modules
+.gitignore
+.git
