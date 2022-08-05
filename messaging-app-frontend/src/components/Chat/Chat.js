@@ -6,8 +6,12 @@ import MicIcon from '@material-ui/icons/Mic'
 import './utils/Messagebox'
 import Messagebox from './utils/Messagebox';
 import { messagesList } from '../Sidebar/Mockdata/Mockdata'
+// import Picker from "emoji-picker-react";
 
-const Chat = () => {
+const Chat = (props) => {
+
+    const { selectedChat } = props;
+
     const [seed, setSeed] = useState("");
 
     useEffect(() => { 
@@ -15,11 +19,12 @@ const Chat = () => {
     }, [])
 
     return (
+        !selectedChat ? <div></div>:
         <div className='chat'>
             <div className='chat__header'>
                 <Avatar src = {`https://avatars.dicebear.com/api/human/b${seed}.svg`} />
                 <div className='chat__headerInfo'>
-                    <h3>Room name</h3>
+                    <h3>{selectedChat.name}</h3>
                     <p>Last seen at...</p>
                 </div>
                 <div className='chat__headerRight'>
@@ -45,6 +50,7 @@ const Chat = () => {
             </div>
             <div className='chat__footer'>
                 <InsertEmoticon />
+                {/* <Picker onEmojiClick={onEmojiClick} /> */}
                 <form>
                     <input  
                         placeholder='Type a message'
@@ -55,6 +61,7 @@ const Chat = () => {
                 <MicIcon/>
             </div>
         </div>
+            
     )
 }
 

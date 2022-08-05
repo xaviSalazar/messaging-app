@@ -8,7 +8,7 @@ import { SearchOutlined } from "@material-ui/icons";
 import SidebarChat from './SidebarChat/SidebarChat'
 import { contactList } from './Mockdata/Mockdata'
 
-const Sidebar = () => {
+const Sidebar = (props) => {
     return (
         <div className="sidebar">
             <div className="sidebar__header">
@@ -34,7 +34,7 @@ const Sidebar = () => {
             <div className="sidebar__chats">
                 {
                     contactList.map((userData, index) => (
-                        <SidebarChat key={index} userData = {userData}/>
+                        <SidebarChat key={index} userData = {userData} setChat = {props.setChat}/>
                     ))
                 }
             </div>

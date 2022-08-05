@@ -4,16 +4,10 @@ import './SidebarChat.css'
 
 const SidebarChat = (props) => {
 
-    const { userData } = props;
-
-    // const[seed, setSeed] = useState("");
-
-    // useEffect( ()=> {
-    //     setSeed(Math.floor(Math.random()*5000))
-    // }, [])
+    const { userData, setChat } = props;
 
     return (
-        <div className = "sidebarChat">
+        <div className = "sidebarChat" onClick = {() => setChat(userData)}>
             <Avatar />
             <div className = "sidebarChat__info">
                 <h2>{userData.name}</h2>
