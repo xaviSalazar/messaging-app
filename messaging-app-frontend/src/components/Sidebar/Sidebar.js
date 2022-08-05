@@ -33,8 +33,8 @@ const Sidebar = () => {
             </div>
             <div className="sidebar__chats">
                 {
-                    contactList.map((userData) => (
-                        <SidebarChat userData = {userData}/>
+                    contactList.map((userData, index) => (
+                        <SidebarChat key={index} userData = {userData}/>
                     ))
                 }
             </div>

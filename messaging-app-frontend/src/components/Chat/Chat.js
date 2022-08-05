@@ -5,6 +5,7 @@ import { AttachFile, MoreVert, SearchOutlined, InsertEmoticon } from '@material-
 import MicIcon from '@material-ui/icons/Mic'
 import './utils/Messagebox'
 import Messagebox from './utils/Messagebox';
+import { messagesList } from '../Sidebar/Mockdata/Mockdata'
 
 const Chat = () => {
     const [seed, setSeed] = useState("");
@@ -34,9 +35,13 @@ const Chat = () => {
                 </div>
             </div>
             <div className='chat__body'>
-                < Messagebox />
-                < Messagebox />
-                < Messagebox />
+
+                {
+                    messagesList.map((userDataMessage, index) => (
+                        <Messagebox key = {index} userDataMessage = {userDataMessage}/>
+                    ))
+                }
+    
             </div>
             <div className='chat__footer'>
                 <InsertEmoticon />
