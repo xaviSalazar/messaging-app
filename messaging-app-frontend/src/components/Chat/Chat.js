@@ -5,6 +5,7 @@ import { AttachFile, MoreVert, SearchOutlined, InsertEmoticon } from '@material-
 import MicIcon from '@material-ui/icons/Mic'
 import './utils/Messagebox'
 import Messagebox from './utils/Messagebox';
+import { httpManager } from '../../managers/httpManager';
 //import { messagesList } from '../Sidebar/Mockdata/Mockdata'
 // import Picker from "emoji-picker-react";
 
@@ -12,18 +13,46 @@ const Chat = (props) => {
 
     const { selectedChat } = props;
     const [messageList, setMessageList] = useState([]);
-    const [message, SetMessage] = useState("");
+    const [text, SetText] = useState("");
 
     const [seed, setSeed] = useState("");
 
-    const handleSubmit = (e) => {
-        console.log("handle submite")
-        SetMessage("");
+    const handleSubmit = async (e) => {
+
         e.preventDefault(); 
+
+        let channelId = "";
+
+        if(!messageList || !messageList.length) {
+            const reqData = [{
+                name: selectedChat.name,
+                phoneNumber: selectedChat.wa_id
+            },{
+                name: "DefaultUser",
+                phoneNumber: "593969044674"
+            }]
+            const channelResponse = await httpManager.createChannel(reqData);
+            channelId = channelResponse.data.responseData._id;
+        }
+
+        const messages = [...messageList];
+        const msgReqData ={
+            text,
+            phoneNumber: "593969044674",
+            addedOn: new Date().getTime(),
+        };
+        const messageResponse = await httpManager.sendMessage({
+            channelId,
+            msgReqData
+        })
+        messages.push(msgReqData);
+        setMessageList(messages)
+        console.log(messageList)
+        SetText("");
     }
 
     const onMessageTextChanged = (typedText) => {
-        SetMessage(typedText);
+        SetText(typedText);
         console.log(typedText);
     }
 
@@ -66,17 +95,16 @@ const Chat = (props) => {
                 {/* <Picker onEmojiClick={onEmojiClick} /> */}
                 <form onSubmit={handleSubmit}>
                     <input  
-                        placeholder='Type a message'
+                        placeholder='Type a text'
                         type='text'
-                        value = {message}
+                        value = {text}
                         onChange={(e) => onMessageTextChanged(e.target.value)}
                     />
                     <button type="submit">Send Message</button>
                 </form>
                 <MicIcon/>
             </div>
-        </div>
-            
+        </div>     
     )
 }
 

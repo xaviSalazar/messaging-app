@@ -10,7 +10,22 @@ const searchUser = async (phoneNumber) => {
     return await axios.get(`${API_BASE_URL}/search-user?phone=${phoneNumber}`)
 };
 
+const createChannel = async (requestData) => {
+    return await axios.post(`${API_BASE_URL}/channel`, requestData)
+};
+
+const getChannelList = async (phoneNumber) => {
+    return await axios.get(`${API_BASE_URL}/channel-list?phoneNumber=${phoneNumber}`)
+};
+
+const sendMessage = async (requestData) => {
+    return await axios.post(`${API_BASE_URL}/message`, requestData)
+};
+
 export const httpManager = {
     createUser,
-    searchUser
+    searchUser,
+    createChannel,
+    getChannelList,
+    sendMessage
 };
