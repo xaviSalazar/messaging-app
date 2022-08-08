@@ -18,7 +18,7 @@ const Sidebar = (props) => {
 
     const refreshContacts = async () => {   
 
-        const contactListData = await httpManager.getAllUsers();
+        const contactListData = await httpManager.getAllUsers("eltia");
         setContactList(contactListData.data.responseData)
         console.log(contactList)
 
