@@ -10,14 +10,18 @@ import { contactList } from './Mockdata/Mockdata'
 import { httpManager } from "../../managers/httpManager";
 
 const Sidebar = (props) => {
+
     const [searchString, setSearchString] = useState("");
+    const [searchResult, setSearchResult] = useState("");
+
 
     const onSearchTextChanged = async (searchText) => {
         setSearchString(searchText);
         console.log(searchText);
         // to do: implement phone validation
         const userData = await httpManager.searchUser(searchText);
-        console.log("userData: ", userData.data.responseData)
+        if(userData.data?.success) setSearchResult(userData.data.responseData)
+        else setSearchResult("")
     }
 
     return (
@@ -49,8 +53,17 @@ const Sidebar = (props) => {
             </div>
             <div className="sidebar__chats">
                 {
+                    searchResult && (
+                        <SidebarChat 
+                            userData = {searchResult} 
+                            setChat = {props.setChat}/>
+                )}
+                {
                     contactList.map((userData, index) => (
-                        <SidebarChat key={index} userData = {userData} setChat = {props.setChat}/>
+                        <SidebarChat 
+                            key={index} 
+                            userData = {userData} 
+                            setChat = {props.setChat}/>
                     ))
                 }
             </div>
