@@ -6,6 +6,10 @@ const SidebarChat = (props) => {
 
     const { userData, setChat } = props;
 
+    // const otherUser = userData.channelUsers.find(
+    //     (userObj) => userObj.name !== userInfo.email
+    // );
+
     return (
         <div className = "sidebarChat" onClick = {() => setChat(userData)}>
             <Avatar />

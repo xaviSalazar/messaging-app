@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import './Sidebar.css';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -6,18 +6,33 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Avatar, IconButton } from '@material-ui/core';
 import { SearchOutlined } from "@material-ui/icons";
 import SidebarChat from './SidebarChat/SidebarChat'
-import { contactList } from './Mockdata/Mockdata'
+//import { contactList } from './Mockdata/Mockdata'
 import { httpManager } from "../../managers/httpManager";
 
 const Sidebar = (props) => {
 
+    const { refreshContactList } = props;
     const [searchString, setSearchString] = useState("");
     const [searchResult, setSearchResult] = useState("");
+    const [contactList, setContactList] = useState([]);
+
+    const refreshContacts = async () => {   
+
+        const contactListData = await httpManager.getAllUsers();
+        setContactList(contactListData.data.responseData)
+        console.log(contactList)
+
+    }
+
+    useEffect(()=>{
+        refreshContacts();
+    }
+    , [refreshContactList])
 
 
     const onSearchTextChanged = async (searchText) => {
         setSearchString(searchText);
-        console.log(searchText);
+        //console.log(searchText);
         // to do: implement phone validation
         const userData = await httpManager.searchUser(searchText);
         if(userData.data?.success) setSearchResult(userData.data.responseData)

@@ -11,49 +11,48 @@ import { httpManager } from '../../managers/httpManager';
 
 const Chat = (props) => {
 
-    const { selectedChat } = props;
+    const { selectedChat, refreshContactList } = props;
     const [messageList, setMessageList] = useState([]);
-    const [text, SetText] = useState("");
-
+    const [message, SetMessage] = useState("");
     const [seed, setSeed] = useState("");
 
     const handleSubmit = async (e) => {
 
         e.preventDefault(); 
-
         let channelId = "";
-
         if(!messageList || !messageList.length) {
-            const reqData = [{
+            const channelUsers = [{
                 name: selectedChat.name,
-                phoneNumber: selectedChat.wa_id
+                phoneNumber: selectedChat.phoneNumber
             },{
                 name: "DefaultUser",
                 phoneNumber: "593969044674"
-            }]
-            const channelResponse = await httpManager.createChannel(reqData);
+            }];
+            console.log("=====", channelUsers)
+            const channelResponse = await httpManager.createChannel({channelUsers});
+            console.log("=====", channelResponse)
             channelId = channelResponse.data.responseData._id;
+            console.log("=====", channelId);         
         }
-
+    
         const messages = [...messageList];
         const msgReqData ={
-            text,
+            message,
             phoneNumber: "593969044674",
             addedOn: new Date().getTime(),
         };
+        console.log("verificar ", channelId)
         const messageResponse = await httpManager.sendMessage({
             channelId,
-            msgReqData
+            messages: msgReqData
         })
         messages.push(msgReqData);
         setMessageList(messages)
-        console.log(messageList)
-        SetText("");
+        SetMessage("");
     }
 
     const onMessageTextChanged = (typedText) => {
-        SetText(typedText);
-        console.log(typedText);
+        SetMessage(typedText);
     }
 
     useEffect(() => { 
@@ -95,9 +94,9 @@ const Chat = (props) => {
                 {/* <Picker onEmojiClick={onEmojiClick} /> */}
                 <form onSubmit={handleSubmit}>
                     <input  
-                        placeholder='Type a text'
-                        type='text'
-                        value = {text}
+                        placeholder='Type a message'
+                        type='message'
+                        value = {message}
                         onChange={(e) => onMessageTextChanged(e.target.value)}
                     />
                     <button type="submit">Send Message</button>

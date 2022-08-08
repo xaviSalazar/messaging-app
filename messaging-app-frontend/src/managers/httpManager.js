@@ -22,10 +22,15 @@ const sendMessage = async (requestData) => {
     return await axios.post(`${API_BASE_URL}/message`, requestData)
 };
 
+const getAllUsers = async () => {
+    return await axios.get(`${API_BASE_URL}/get-users`)
+};
+
 export const httpManager = {
     createUser,
     searchUser,
     createChannel,
     getChannelList,
-    sendMessage
+    sendMessage,
+    getAllUsers
 };
