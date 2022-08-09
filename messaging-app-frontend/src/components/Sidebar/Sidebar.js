@@ -11,26 +11,25 @@ import { httpManager } from "../../managers/httpManager";
 
 const Sidebar = (props) => {
 
-    const { refreshContactList } = props;
+    // const { refreshContactList } = props;
     const [searchString, setSearchString] = useState("");
     const [searchResult, setSearchResult] = useState("");
     const [contactList, setContactList] = useState([]);
 
     const refreshContacts = async () => {   
-
         const contactListData = await httpManager.getAllUsers("eltia");
         setContactList(contactListData.data.responseData)
         console.log(contactList)
-
     }
 
     useEffect(()=>{
         refreshContacts();
     }
-    , [refreshContactList])
+    , [])
 
 
     const onSearchTextChanged = async (searchText) => {
+        
         setSearchString(searchText);
         //console.log(searchText);
         // to do: implement phone validation
@@ -71,14 +70,18 @@ const Sidebar = (props) => {
                     searchResult && (
                         <SidebarChat 
                             userData = {searchResult} 
-                            setChat = {props.setChat}/>
+                            setChat = {props.setChat}
+                            setMessagesList = {props.setMessagesList}
+                        />
                 )}
                 {
                     contactList.map((userData, index) => (
                         <SidebarChat 
                             key={index} 
                             userData = {userData} 
-                            setChat = {props.setChat}/>
+                            setChat = {props.setChat}
+                            setMessagesList = {props.setMessagesList}
+                        />
                     ))
                 }
             </div>

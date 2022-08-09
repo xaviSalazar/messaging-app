@@ -11,16 +11,24 @@ import { httpManager } from '../../managers/httpManager';
 
 const Chat = (props) => {
 
-    const { selectedChat, refreshContactList } = props;
+    const { selectedChat, MessagesList} = props;
     const [messageList, setMessageList] = useState([]);
     const [message, SetMessage] = useState("");
     const [seed, setSeed] = useState("");
+
+    useEffect(()=>{
+        setMessageList(MessagesList);
+    }
+    , [MessagesList])
+
 
     const handleSubmit = async (e) => {
 
         e.preventDefault(); 
         let channelId = "";
+        
         if(!messageList || !messageList.length) {
+            
             const channelUsers = [{
                 name: selectedChat.name,
                 phoneNumber: selectedChat.phoneNumber
@@ -33,6 +41,10 @@ const Chat = (props) => {
             console.log("=====", channelResponse)
             channelId = channelResponse.data.responseData._id;
             console.log("=====", channelId);         
+        } else {
+            const receiveId = await httpManager.getChannelList(selectedChat.phoneNumber);
+            console.log(receiveId);
+            channelId = receiveId.data.responseData[0]._id;
         }
     
         const messages = [...messageList];
@@ -40,14 +52,26 @@ const Chat = (props) => {
             message,
             phoneNumber: "593969044674",
             addedOn: new Date().getTime(),
+            senderID: 0
         };
         console.log("verificar ", channelId)
+
+        const data = {
+            messaging_product: "whatsapp",
+            to: selectedChat.phoneNumber,
+            text: {
+                body: message
+            }
+        };
+        
         const messageResponse = await httpManager.sendMessage({
             channelId,
             messages: msgReqData
         })
+        const sendMessageWhatsapp = await httpManager.sendApiMessage(data);
         messages.push(msgReqData);
         setMessageList(messages)
+        //setMessageList(MessagesList);
         SetMessage("");
     }
 
@@ -63,7 +87,7 @@ const Chat = (props) => {
         !selectedChat ? <div></div>:
         <div className='chat'>
             <div className='chat__header'>
-                <Avatar src = {`https://avatars.dicebear.com/api/human/b${seed}.svg`} />
+                <Avatar />
                 <div className='chat__headerInfo'>
                     <h3>{selectedChat.name}</h3>
                     <p>Last seen at...</p>
@@ -83,9 +107,11 @@ const Chat = (props) => {
             <div className='chat__body'>
 
                 {
+                   
                     messageList.map((userDataMessage, index) => (
                         <Messagebox key = {index} userDataMessage = {userDataMessage}/>
                     ))
+                    
                 }
     
             </div>

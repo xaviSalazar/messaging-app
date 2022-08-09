@@ -6,20 +6,21 @@ import { useState } from 'react';
 function App() {
 
   const [selectedChat, setChat] = useState();
-  const [refreshContactList, toggleRefreshContactist] = useState(false);
+  const [MessagesList, setMessagesList] = useState([]);
+  //const [refreshContactList, toggleRefreshContactist] = useState(false);
 
   return (
     <div className="app">
       <div className="app_body">
         <Sidebar 
           setChat = {setChat}
-          refreshContactList={refreshContactList}
+          setMessagesList = {setMessagesList}
+
         />
         <Chat 
           selectedChat = {selectedChat} 
-          refreshContactList = {() => 
-          toggleRefreshContactist(!refreshContactList)
-          }
+          MessagesList = {MessagesList}
+
         />
       </div>
     </div>
