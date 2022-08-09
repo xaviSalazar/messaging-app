@@ -50,28 +50,19 @@ const Chat = (props) => {
         const messages = [...messageList];
         const msgReqData ={
             message,
-            phoneNumber: "593969044674",
+            phoneNumber: selectedChat.phoneNumber,
             addedOn: new Date().getTime(),
             senderID: 0
         };
         console.log("verificar ", channelId)
-
-        const data = {
-            messaging_product: "whatsapp",
-            to: selectedChat.phoneNumber,
-            text: {
-                body: message
-            }
-        };
         
         const messageResponse = await httpManager.sendMessage({
             channelId,
             messages: msgReqData
         })
-        const sendMessageWhatsapp = await httpManager.sendApiMessage(data);
+
         messages.push(msgReqData);
         setMessageList(messages)
-        //setMessageList(MessagesList);
         SetMessage("");
     }
 
