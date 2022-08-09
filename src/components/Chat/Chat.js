@@ -14,7 +14,6 @@ const Chat = (props) => {
     const { selectedChat, MessagesList} = props;
     const [messageList, setMessageList] = useState([]);
     const [message, SetMessage] = useState("");
-    const [seed, setSeed] = useState("");
 
     useEffect(()=>{
         setMessageList(MessagesList);
@@ -49,6 +48,7 @@ const Chat = (props) => {
     
         const messages = [...messageList];
         const msgReqData ={
+            name: "DefaultUser",
             message,
             phoneNumber: selectedChat.phoneNumber,
             addedOn: new Date().getTime(),
@@ -70,9 +70,6 @@ const Chat = (props) => {
         SetMessage(typedText);
     }
 
-    useEffect(() => { 
-        setSeed(Math.floor(Math.random()*5000))
-    }, [])
 
     return (
         !selectedChat ? <div></div>:

@@ -7,24 +7,16 @@ function App() {
 
   const [selectedChat, setChat] = useState();
   const [MessagesList, setMessagesList] = useState([]);
-  //const [refreshContactList, toggleRefreshContactist] = useState(false);
 
   return (
     <div className="app">
       <div className="app_body">
-        <Sidebar 
-          setChat = {setChat}
-          setMessagesList = {setMessagesList}
-
-        />
-        <Chat 
-          selectedChat = {selectedChat} 
-          MessagesList = {MessagesList}
-
-        />
+        <Sidebar setChat = {setChat} setMessagesList = {setMessagesList}/>
+        <Chat selectedChat = {selectedChat} MessagesList = {MessagesList}/>
       </div>
     </div>
   );
+  
 }
 
 export default App;

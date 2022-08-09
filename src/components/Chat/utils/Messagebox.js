@@ -8,7 +8,7 @@ const Messagebox = (props) => {
     return (
         <p className={(userDataMessage.senderID === 1 ?'chat__message chat__receiver':'chat__message')}>
                     <span className = 'chat__name' >
-                        {userDataMessage.phoneNumber}
+                        {userDataMessage.name}
                     </span>
                         {userDataMessage.message}
                     <span className='chat__timestamp'>
