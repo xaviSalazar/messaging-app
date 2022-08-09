@@ -1,7 +1,7 @@
 {
   "name": "messaging-app-frontend",
   "version": "0.1.0",
-  "homepage": "https://xaviSalazar.github.io/react-gh-pages",
+  "homepage": "https://xaviSalazar.github.io/messaging-app",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.4",
@@ -42,5 +42,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
   }
 }

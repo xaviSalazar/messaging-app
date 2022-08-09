@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/react-gh-pages/static/css/main.0996c4f3.css",
-    "main.js": "/react-gh-pages/static/js/main.3fb29f46.js",
-    "index.html": "/react-gh-pages/index.html",
-    "main.0996c4f3.css.map": "/react-gh-pages/static/css/main.0996c4f3.css.map",
-    "main.3fb29f46.js.map": "/react-gh-pages/static/js/main.3fb29f46.js.map"
+    "main.css": "/messaging-app/static/css/main.0996c4f3.css",
+    "main.js": "/messaging-app/static/js/main.3fb29f46.js",
+    "index.html": "/messaging-app/index.html",
+    "main.0996c4f3.css.map": "/messaging-app/static/css/main.0996c4f3.css.map",
+    "main.3fb29f46.js.map": "/messaging-app/static/js/main.3fb29f46.js.map"
   },
   "entrypoints": [
     "static/css/main.0996c4f3.css",
