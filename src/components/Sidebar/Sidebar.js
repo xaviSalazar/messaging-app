@@ -8,6 +8,38 @@ import { SearchOutlined } from "@material-ui/icons";
 import SidebarChat from './SidebarChat/SidebarChat'
 //import { contactList } from './Mockdata/Mockdata'
 import { httpManager } from "../../managers/httpManager";
+import socket from '../../managers/socketioManager'
+
+const sessionID = localStorage.getItem("sessionID")
+var usernameAlreadySelected = false;
+
+if(sessionID)  {
+    console.log(`inside sessionID: ${sessionID}`)
+    usernameAlreadySelected = true;
+    socket.auth = { sessionID }
+    socket.connect()
+} else {
+    const username = "DefaultUser";
+    socket.auth = { username }
+    socket.connect()
+}
+
+socket.on("session", ({sessionID, userID}) => {
+    // attach the session ID to the next reconnection attemps
+    socket.auth = { sessionID };
+    console.log(`sessionID ${sessionID}, userID ${userID}`)
+    //store it in localStorage
+    localStorage.setItem("sessionID", sessionID);
+    //save the ID of the user
+    socket.userID = userID
+    // const usuario = socket.id;
+    // console.log(usuario);
+})
+
+socket.on('user_answered', ({ trigger}) => {
+    console.log("some event")
+    console.log(trigger)
+})
 
 const Sidebar = (props) => {
 

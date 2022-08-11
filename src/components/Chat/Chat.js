@@ -6,11 +6,10 @@ import MicIcon from '@material-ui/icons/Mic'
 import './utils/Messagebox'
 import Messagebox from './utils/Messagebox';
 import { httpManager } from '../../managers/httpManager';
-//import { messagesList } from '../Sidebar/Mockdata/Mockdata'
-// import Picker from "emoji-picker-react";
+
 
 const Chat = (props) => {
-
+    
     const { selectedChat, MessagesList} = props;
     const [messageList, setMessageList] = useState([]);
     const [message, SetMessage] = useState("");
@@ -56,7 +55,7 @@ const Chat = (props) => {
         };
         console.log("verificar ", channelId)
         
-        const messageResponse = await httpManager.sendMessage({
+        await httpManager.sendMessage({
             channelId,
             messages: msgReqData
         })
