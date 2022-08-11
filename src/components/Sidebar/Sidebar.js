@@ -25,6 +25,7 @@ if(sessionID)  {
 }
 
 socket.on("session", ({sessionID, userID}) => {
+    
     // attach the session ID to the next reconnection attemps
     socket.auth = { sessionID };
     console.log(`sessionID ${sessionID}, userID ${userID}`)
@@ -32,8 +33,7 @@ socket.on("session", ({sessionID, userID}) => {
     localStorage.setItem("sessionID", sessionID);
     //save the ID of the user
     socket.userID = userID
-    // const usuario = socket.id;
-    // console.log(usuario);
+  
 })
 
 socket.on('user_answered', ({ trigger}) => {
