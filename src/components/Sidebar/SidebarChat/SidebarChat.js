@@ -13,7 +13,7 @@ const SidebarChat = (props) => {
         const userMessages = await httpManager.getChannelList(userData.phoneNumber);
         //console.log("userMessages", userMessages);
         //console.log(userMessages.data.responseData[0].messages)
-        console.log("userMessages", userMessages);
+        //console.log("userMessages", userMessages);
         if(userMessages.data.responseData.length !== 0)
             setMessagesList(userMessages.data.responseData[0].messages) 
         else 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import './Sidebar.css';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -7,15 +7,15 @@ import { Avatar, IconButton } from '@material-ui/core';
 import { SearchOutlined } from "@material-ui/icons";
 import SidebarChat from './SidebarChat/SidebarChat'
 //import { contactList } from './Mockdata/Mockdata'
-import { httpManager } from "../../managers/httpManager";
 import socket from '../../managers/socketioManager'
+import { useSelector } from "react-redux";
+import { searchOneUser } from '../../redux/GetUsers/UsersAction'
+import { useDispatch } from 'react-redux';
 
 const sessionID = localStorage.getItem("sessionID")
-var usernameAlreadySelected = false;
 
 if(sessionID)  {
     console.log(`inside sessionID: ${sessionID}`)
-    usernameAlreadySelected = true;
     socket.auth = { sessionID }
     socket.connect()
 } else {
@@ -25,7 +25,6 @@ if(sessionID)  {
 }
 
 socket.on("session", ({sessionID, userID}) => {
-    
     // attach the session ID to the next reconnection attemps
     socket.auth = { sessionID };
     console.log(`sessionID ${sessionID}, userID ${userID}`)
@@ -42,32 +41,18 @@ socket.on('user_answered', ({ trigger}) => {
 })
 
 const Sidebar = (props) => {
-
+  
+    const dispatch = useDispatch();
     // const { refreshContactList } = props;
     const [searchString, setSearchString] = useState("");
-    const [searchResult, setSearchResult] = useState("");
-    const [contactList, setContactList] = useState([]);
-
-    const refreshContacts = async () => {   
-        const contactListData = await httpManager.getAllUsers("eltia");
-        setContactList(contactListData.data.responseData)
-        //console.log("contactList", contactListData.data.responseData)
-    }
-
-    useEffect(()=>{
-        refreshContacts();
-    }
-    , [])
-
+    // use selectors
+    const contactList  = useSelector((state) => state.getUsers);
 
     const onSearchTextChanged = async (searchText) => {
-        
         setSearchString(searchText);
         //console.log(searchText);
         // to do: implement phone validation
-        const userData = await httpManager.searchUser(searchText);
-        if(userData.data?.success) setSearchResult(userData.data.responseData)
-        else setSearchResult("")
+        dispatch(searchOneUser(searchText))
     }
 
     return (
@@ -98,14 +83,6 @@ const Sidebar = (props) => {
                 </div>
             </div>
             <div className="sidebar__chats">
-                {
-                    searchResult && (
-                        <SidebarChat 
-                            userData = {searchResult} 
-                            setChat = {props.setChat}
-                            setMessagesList = {props.setMessagesList}
-                        />
-                )}
                 {
                     contactList.map((userData, index) => (
                         <SidebarChat 
