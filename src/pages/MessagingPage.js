@@ -13,12 +13,11 @@ const MessagingPage = () => {
           }, [dispatch])
 
     const [selectedChat, setChat] = useState();
-    const [MessagesList, setMessagesList] = useState([]);
   
 return (
     <>
-    <Sidebar setChat = {setChat} setMessagesList = {setMessagesList}/>
-    <Chat selectedChat = {selectedChat} MessagesList = {MessagesList}/>
+    <Sidebar setChat = {setChat} />
+    <Chat selectedChat = {selectedChat} />
     </>
 )
 

@@ -1,8 +1,8 @@
 
-// empty messages
+// empty users list
 const initialState = []
 
-export default (msg_list = initialState, action) => {
+export default (users_list = initialState, action) => {
 
     switch( action.type ) {
         case 'GET-ALL-USERS':
@@ -11,9 +11,17 @@ export default (msg_list = initialState, action) => {
            console.log("inside search")
            console.log(action.payload)
            return [action.payload];
+        case 'NEW-MESSAGE':
+            const index = users_list.findIndex(object => {
+                return object.phoneNumber == action.payload.from;
+            });
+            if (index !== -1) {
+                users_list[index].lastMessage = action.payload.message;
+            }
+            return users_list;
         
         default:
-            return msg_list;
+            return users_list;
     }
 
 } 

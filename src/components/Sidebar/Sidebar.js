@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import './Sidebar.css';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -6,11 +6,11 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Avatar, IconButton } from '@material-ui/core';
 import { SearchOutlined } from "@material-ui/icons";
 import SidebarChat from './SidebarChat/SidebarChat'
-//import { contactList } from './Mockdata/Mockdata'
 import socket from '../../managers/socketioManager'
 import { useSelector } from "react-redux";
-import { searchOneUser } from '../../redux/GetUsers/UsersAction'
+import { searchOneUser, updateLastMessage } from '../../redux/GetUsers/UsersAction'
 import { useDispatch } from 'react-redux';
+
 
 const sessionID = localStorage.getItem("sessionID")
 
@@ -35,18 +35,30 @@ socket.on("session", ({sessionID, userID}) => {
   
 })
 
-socket.on('user_answered', ({ trigger}) => {
-    console.log("some event")
-    console.log(trigger)
-})
 
 const Sidebar = (props) => {
   
+    // 
     const dispatch = useDispatch();
     // const { refreshContactList } = props;
     const [searchString, setSearchString] = useState("");
+    const [, updateState] = React.useState();
+    const forceUpdate = React.useCallback(() => updateState({}), []);
     // use selectors
     const contactList  = useSelector((state) => state.getUsers);
+    console.log("rendering")
+
+    useEffect(() => {
+        const eventListener = ({ trigger, from, msg}) => {
+            console.log("dentro de listener");
+            dispatch(updateLastMessage(from, msg))
+            forceUpdate()
+        };
+        socket.on('user_answered', eventListener);
+        return () => socket.off('user_answered')
+
+    }, [socket, dispatch, contactList])
+
 
     const onSearchTextChanged = async (searchText) => {
         setSearchString(searchText);
@@ -84,12 +96,11 @@ const Sidebar = (props) => {
             </div>
             <div className="sidebar__chats">
                 {
-                    contactList.map((userData, index) => (
+                    contactList.map((userData, index) => (                 
                         <SidebarChat 
                             key={index} 
                             userData = {userData} 
                             setChat = {props.setChat}
-                            setMessagesList = {props.setMessagesList}
                         />
                     ))
                 }

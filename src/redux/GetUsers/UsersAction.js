@@ -23,3 +23,7 @@ export const searchOneUser =(phoneNumber) => async(dispatch) => {
         console.log(error.message);
     }
 }
+
+export const updateLastMessage = (from, message) => async(dispatch) => {
+    dispatch({type: 'NEW-MESSAGE', payload: {from, message}})
+}

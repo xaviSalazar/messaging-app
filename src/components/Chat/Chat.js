@@ -6,18 +6,23 @@ import MicIcon from '@material-ui/icons/Mic'
 import './utils/Messagebox'
 import Messagebox from './utils/Messagebox';
 import { httpManager } from '../../managers/httpManager';
+import { useSelector } from "react-redux";
+import socket from '../../managers/socketioManager'
 
 
 const Chat = (props) => {
+
+    const userMessages  = useSelector((state) => state.getMessagesFromChannel);
     
-    const { selectedChat, MessagesList} = props;
+    const {selectedChat} = props;
     const [messageList, setMessageList] = useState([]);
     const [message, SetMessage] = useState("");
+    console.log("rendering chat component")
 
-    useEffect(()=>{
-        setMessageList(MessagesList);
-    }
-    , [MessagesList])
+    useEffect(() => {
+        setMessageList(userMessages);
+        console.log("menqje")
+    })
 
 
     const handleSubmit = async (e) => {

@@ -18,16 +18,6 @@ export const createChannel = (requestData) => async(dispatch) => {
         console.log(error.message);
     }
 }
-
-
-export const getChannelList = (phoneNumber) => async(dispatch) => {
-    try {
-        const { data } = await api.getChannelList(phoneNumber);
-        dispatch({type: 'GET-CHANNEL-LIST', payload: data});
-    } catch(error) {
-        console.log(error.message)
-    }
-}
     
 export const sendMessage = (requestData) => async(dispatch) => {
     try {
