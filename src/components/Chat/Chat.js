@@ -7,27 +7,39 @@ import './utils/Messagebox'
 import Messagebox from './utils/Messagebox';
 import { httpManager } from '../../managers/httpManager';
 import { useSelector } from "react-redux";
-import socket from '../../managers/socketioManager'
+import { useDispatch } from 'react-redux';
+import { getMessagesFromChannel } from '../../redux/GetMessages/Actions'
 
 
 const Chat = (props) => {
 
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
-    
-    const {selectedChat} = props;
+    const dispatch = useDispatch();
+    const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
     const [message, SetMessage] = useState("");
+
     console.log("rendering chat component")
 
     useEffect(() => {
         setMessageList(userMessages);
         console.log("menqje")
-    })
+    },[userMessages])
 
+    useEffect(() => {
+
+    const eventListener = ({ trigger, from, msg}) => {
+        console.log(`${trigger}, ${from}, ${msg}`)
+        console.log("dentro de listener cote chat");
+        dispatch(getMessagesFromChannel(selectedChat.phoneNumber))
+    };
+    socket.on('user_answered', eventListener);
+    return () => socket.off('user_answered')
+    }, [socket, selectedChat])
 
     const handleSubmit = async (e) => {
-
         e.preventDefault(); 
+        if (message === '') return;
         let channelId = "";
         
         if(!messageList || !messageList.length) {
@@ -115,7 +127,7 @@ const Chat = (props) => {
                         placeholder='Type a message'
                         type='message'
                         value = {message}
-                        onChange={(e) => onMessageTextChanged(e.target.value)}
+                        onChange={(e) => onMessageTextChanged(e.target.value) }
                     />
                     <button type="submit">Send Message</button>
                 </form>

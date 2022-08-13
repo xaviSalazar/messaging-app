@@ -6,41 +6,17 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Avatar, IconButton } from '@material-ui/core';
 import { SearchOutlined } from "@material-ui/icons";
 import SidebarChat from './SidebarChat/SidebarChat'
-import socket from '../../managers/socketioManager'
+
 import { useSelector } from "react-redux";
 import { searchOneUser, updateLastMessage } from '../../redux/GetUsers/UsersAction'
 import { useDispatch } from 'react-redux';
-
-
-const sessionID = localStorage.getItem("sessionID")
-
-if(sessionID)  {
-    console.log(`inside sessionID: ${sessionID}`)
-    socket.auth = { sessionID }
-    socket.connect()
-} else {
-    const username = "DefaultUser";
-    socket.auth = { username }
-    socket.connect()
-}
-
-socket.on("session", ({sessionID, userID}) => {
-    // attach the session ID to the next reconnection attemps
-    socket.auth = { sessionID };
-    console.log(`sessionID ${sessionID}, userID ${userID}`)
-    //store it in localStorage
-    localStorage.setItem("sessionID", sessionID);
-    //save the ID of the user
-    socket.userID = userID
-  
-})
 
 
 const Sidebar = (props) => {
   
     // 
     const dispatch = useDispatch();
-    // const { refreshContactList } = props;
+    const { socket } = props;
     const [searchString, setSearchString] = useState("");
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
@@ -57,7 +33,7 @@ const Sidebar = (props) => {
         socket.on('user_answered', eventListener);
         return () => socket.off('user_answered')
 
-    }, [socket, dispatch, contactList])
+    }, [socket, contactList])
 
 
     const onSearchTextChanged = async (searchText) => {
