@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { getMessagesFromChannel } from '../../redux/GetMessages/Actions'
 
-var testeo = false;
+var testeo = true;
 
 const Chat = (props) => {
 
