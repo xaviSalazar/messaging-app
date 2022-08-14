@@ -31,7 +31,7 @@ const SidebarChat = (props) => {
         let veamos = userData
 
         var messagesToFilter = userMessages.filter( function(msg) {
-            return msg.name == userData.name
+            return msg.phoneNumber == userData.phoneNumber
         });
 
         var objet = messagesToFilter.pop();
