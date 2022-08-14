@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
 import socket from '../managers/socketioManager'
+import { Unsubscribe } from '@material-ui/icons';
 
 const sessionID = localStorage.getItem("sessionID")
 
@@ -31,13 +32,14 @@ socket.on("session", ({sessionID, userID}) => {
 
 const MessagingPage = () => {
 
-
     const dispatch = useDispatch();
     useEffect( ()=>{
+            console.log("useeffect Messaging js")
             dispatch(getUsers("eltia"))
-          }, [dispatch])
+          }, [])
 
     const [selectedChat, setChat] = useState();
+    const [lastMessage, setLastMessage] = useState("");
   
 return (
     <>

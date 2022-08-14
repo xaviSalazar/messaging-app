@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { getMessagesFromChannel } from '../../redux/GetMessages/Actions'
 
+var testeo = false;
 
 const Chat = (props) => {
 
@@ -18,23 +19,34 @@ const Chat = (props) => {
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
     const [message, SetMessage] = useState("");
+   
 
     console.log("rendering chat component")
-
     useEffect(() => {
-        setMessageList(userMessages);
-        console.log("menqje")
-    },[userMessages])
-
+        if(!testeo)setMessageList(userMessages);
+    }, [userMessages])
+    
     useEffect(() => {
+        console.log('useEFFECT chat js');
+        //setMessageList(userMessages);
+        if(selectedChat) testeo=false;
 
-    const eventListener = ({ trigger, from, msg}) => {
-        console.log(`${trigger}, ${from}, ${msg}`)
-        console.log("dentro de listener cote chat");
-        dispatch(getMessagesFromChannel(selectedChat.phoneNumber))
-    };
-    socket.on('user_answered', eventListener);
-    return () => socket.off('user_answered')
+        const eventListener = ({ trigger, from, msg}) => {
+            console.log(`${trigger}, ${from}, ${msg}`)
+            console.log("dentro de listener cote chat");
+            dispatch(getMessagesFromChannel(from))     
+            if(selectedChat.phoneNumber !== from) {
+                console.log('entro en true')
+                testeo = true;
+            } 
+            // console.log(userMessages)       
+        };
+
+        socket.on('user_answered', eventListener);
+        return () => {
+            socket.off('user_answered')
+            console.log('desabonnement')  
+    }
     }, [socket, selectedChat])
 
     const handleSubmit = async (e) => {

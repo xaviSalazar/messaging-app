@@ -6,7 +6,7 @@ const Messagebox = (props) => {
     const { userDataMessage } = props;
 
     return (
-        <p className={(userDataMessage.senderID === 1 ?'chat__message chat__receiver':'chat__message')}>
+        <p className={(userDataMessage.senderID === 0 ?'chat__message chat__receiver':'chat__message')}>
                     <span className = 'chat__name' >
                         {userDataMessage.name}
                     </span>

@@ -24,18 +24,6 @@ const Sidebar = (props) => {
     const contactList  = useSelector((state) => state.getUsers);
     console.log("rendering")
 
-    useEffect(() => {
-        const eventListener = ({ trigger, from, msg}) => {
-            console.log("dentro de listener");
-            dispatch(updateLastMessage(from, msg))
-            forceUpdate()
-        };
-        socket.on('user_answered', eventListener);
-        return () => socket.off('user_answered')
-
-    }, [socket, contactList])
-
-
     const onSearchTextChanged = async (searchText) => {
         setSearchString(searchText);
         //console.log(searchText);

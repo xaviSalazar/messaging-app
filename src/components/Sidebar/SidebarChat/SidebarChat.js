@@ -7,26 +7,50 @@ import { getMessagesFromChannel } from '../../../redux/GetMessages/Actions'
 
 const SidebarChat = (props) => {
 
+    
+
     const dispatch = useDispatch();
+    const userMessages  = useSelector((state) => state.getMessagesFromChannel);
     const { userData, setChat} = props;
     const [lastMessage, setLastMessage] = useState("")
+    const [number, setNumber] = useState(0)
+    const [ showInfo, setShowInfo ] = useState({})
+    const [, updateState] = React.useState();
+    const forceUpdate = React.useCallback(() => updateState({}), []);
+
+    console.log(`rendering SidebarChat ${userData.name}`)
 
     const setMessageAndChat = async () => {
         setChat(userData);
         dispatch(getMessagesFromChannel(userData.phoneNumber))
-       // console.log(userMessages)
     }
 
-    useEffect (()=>{
-        setLastMessage(userData.lastMessage)}
-        ,[dispatch, userData.lastMessage])
+    useEffect(() => {
+
+        console.log(`useEffect sidebarchat js`)
+        let veamos = userData
+
+        var messagesToFilter = userMessages.filter( function(msg) {
+            return msg.name == userData.name
+        });
+
+        var objet = messagesToFilter.pop();
+
+        if(objet) {
+        console.log(objet.message)
+        veamos.lastMessage = objet.message
+        setShowInfo(veamos)
+        forceUpdate()
+        }
+
+    }, [userMessages, userData])
 
     return (
         <div className = "sidebarChat" onClick = {setMessageAndChat}>
             <Avatar />
             <div className = "sidebarChat__info">
                 <h2>{userData.name}</h2>
-                <p>{lastMessage}</p>
+                <p>{ showInfo.lastMessage }</p>
             </div>
         </div>
     )
