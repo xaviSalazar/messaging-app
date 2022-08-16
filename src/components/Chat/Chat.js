@@ -9,14 +9,12 @@ import { httpManager } from '../../managers/httpManager';
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { getMessagesFromChannel } from '../../redux/GetMessages/Actions'
-import {sendApiMessage} from '../../api'
 
 var testeo = true;
 
 const Chat = (props) => {
 
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
-    const configs = useSelector((state) => state.getPhone )
     const dispatch = useDispatch();
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);

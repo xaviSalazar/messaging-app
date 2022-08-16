@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import './Sidebar.css';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -8,7 +8,7 @@ import { SearchOutlined } from "@material-ui/icons";
 import SidebarChat from './SidebarChat/SidebarChat'
 
 import { useSelector } from "react-redux";
-import { searchOneUser, updateLastMessage } from '../../redux/GetUsers/UsersAction'
+import { searchOneUser } from '../../redux/GetUsers/UsersAction'
 import { useDispatch } from 'react-redux';
 
 
@@ -16,10 +16,7 @@ const Sidebar = (props) => {
   
     // 
     const dispatch = useDispatch();
-    const { socket } = props;
     const [searchString, setSearchString] = useState("");
-    const [, updateState] = React.useState();
-    const forceUpdate = React.useCallback(() => updateState({}), []);
     // use selectors
     const contactList  = useSelector((state) => state.getUsers);
     console.log("rendering")
