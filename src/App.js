@@ -16,7 +16,7 @@ function App() {
       <div className="app_body">
       <Navbar/>
       <Routes>
-          <Route path='/' exact element = {<MessagingPage />} />
+          <Route path='' exact element = {<MessagingPage />} />
           <Route path='/settings' exact element = {<Settings />} />
       </Routes>
       </div>
