@@ -7,16 +7,10 @@ import { getMessagesFromChannel } from '../../../redux/GetMessages/Actions'
 
 const SidebarChat = (props) => {
 
-    
-
     const dispatch = useDispatch();
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
     const { userData, setChat} = props;
-    const [lastMessage, setLastMessage] = useState("")
-    const [number, setNumber] = useState(0)
     const [ showInfo, setShowInfo ] = useState({})
-    const [, updateState] = React.useState();
-    const forceUpdate = React.useCallback(() => updateState({}), []);
 
     console.log(`rendering SidebarChat ${userData.name}`)
 
@@ -31,16 +25,18 @@ const SidebarChat = (props) => {
         let veamos = userData
 
         var messagesToFilter = userMessages.filter( function(msg) {
-            return msg.phoneNumber == userData.phoneNumber
+            return msg.phoneNumber === userData.phoneNumber
         });
+        console.log(messagesToFilter)
 
         var objet = messagesToFilter.pop();
 
         if(objet) {
         console.log(objet.message)
         veamos.lastMessage = objet.message
-        setShowInfo(veamos)
-        forceUpdate()
+
+        const temporaire = {...veamos}
+        setShowInfo(temporaire)
         }
 
     }, [userMessages, userData])

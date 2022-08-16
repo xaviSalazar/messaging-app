@@ -34,11 +34,14 @@ const Chat = (props) => {
         const eventListener = ({ trigger, from, msg}) => {
             console.log(`${trigger}, ${from}, ${msg}`)
             console.log("dentro de listener cote chat");
-            dispatch(getMessagesFromChannel(from))     
+            dispatch(getMessagesFromChannel(from))   
+            if(selectedChat)
+            {
             if(selectedChat.phoneNumber !== from) {
                 console.log('entro en true')
                 testeo = true;
             } 
+            }
             // console.log(userMessages)       
         };
 
@@ -47,7 +50,7 @@ const Chat = (props) => {
             socket.off('user_answered')
             console.log('desabonnement')  
     }
-    }, [socket, selectedChat])
+    }, [socket, selectedChat, dispatch])
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
