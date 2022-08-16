@@ -11,12 +11,12 @@ function App() {
 
   return (
     <>
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
     <div className="app">
       <div className="app_body">
       <Navbar/>
       <Routes>
-          <Route path={process.env.PUBLIC_URL + '/'} exact element = {<MessagingPage />} />
+          <Route path='/' exact element = {<MessagingPage />} />
           <Route path='/settings' exact element = {<Settings />} />
       </Routes>
       </div>
