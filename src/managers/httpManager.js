@@ -27,6 +27,10 @@ const getAllUsers = async (client) => {
     return await axios.get(`${API_BASE_URL}/get-users?owner=${client}`)
 };
 
+const deleteALlMsg = async(channel_id) => {
+    return await axios.get(`${API_BASE_URL}/delete-messages?channel_id=${channel_id}`)
+}
+
 export const httpManager = {
     createUser,
     searchUser,
@@ -34,4 +38,5 @@ export const httpManager = {
     getChannelList,
     sendMessage,
     getAllUsers,
+    deleteALlMsg
 };

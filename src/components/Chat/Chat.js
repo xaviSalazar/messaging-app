@@ -9,12 +9,14 @@ import { httpManager } from '../../managers/httpManager';
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { getMessagesFromChannel } from '../../redux/GetMessages/Actions'
+import {sendApiMessage} from '../../api'
 
 var testeo = true;
 
 const Chat = (props) => {
 
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
+    const configs = useSelector((state) => state.getPhone )
     const dispatch = useDispatch();
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
@@ -64,7 +66,7 @@ const Chat = (props) => {
                 phoneNumber: selectedChat.phoneNumber
             },{
                 name: "DefaultUser",
-                phoneNumber: "593969044674"
+                phoneNumber: "15550900270"
             }];
             console.log("=====", channelUsers)
             const channelResponse = await httpManager.createChannel({channelUsers});
@@ -81,12 +83,13 @@ const Chat = (props) => {
         const msgReqData ={
             name: "DefaultUser",
             message,
-            phoneNumber: selectedChat.phoneNumber,
+            to: selectedChat.phoneNumber,
+            from: "15550900270",
             addedOn: new Date().getTime(),
             senderID: 0
         };
         console.log("verificar ", channelId)
-        
+
         await httpManager.sendMessage({
             channelId,
             messages: msgReqData
@@ -99,6 +102,15 @@ const Chat = (props) => {
 
     const onMessageTextChanged = (typedText) => {
         SetMessage(typedText);
+    }
+
+    const deleteALl = async () => {
+            setMessageList([]);
+            let channelId;
+            const receiveId = await httpManager.getChannelList(selectedChat.phoneNumber);
+            console.log(receiveId);
+            channelId = receiveId.data.responseData[0]._id;
+            await httpManager.deleteALlMsg(channelId);
     }
 
 
@@ -124,13 +136,12 @@ const Chat = (props) => {
                 </div>
             </div>
             <div className='chat__body'>
+                <button onClick={deleteALl}> Delete Messages</button>
 
                 {
-                   
                     messageList.map((userDataMessage, index) => (
                         <Messagebox key = {index} userDataMessage = {userDataMessage}/>
-                    ))
-                    
+                    ))   
                 }
     
             </div>

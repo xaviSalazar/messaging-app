@@ -16,6 +16,7 @@ const SidebarChat = (props) => {
 
     const setMessageAndChat = async () => {
         setChat(userData);
+        console.log(userData)
         dispatch(getMessagesFromChannel(userData.phoneNumber))
     }
 
@@ -23,11 +24,10 @@ const SidebarChat = (props) => {
 
         console.log(`useEffect sidebarchat js`)
         let veamos = userData
-
+        console.log(userMessages)
         var messagesToFilter = userMessages.filter( function(msg) {
-            return msg.phoneNumber === userData.phoneNumber
+            return msg.from === userData.phoneNumber
         });
-        console.log(messagesToFilter)
 
         var objet = messagesToFilter.pop();
 
