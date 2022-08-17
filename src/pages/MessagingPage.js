@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
 import socket from '../managers/socketioManager'
+
+// retrieve sessionID: should be the phoneNumber
 const sessionID = localStorage.getItem("sessionID")
 
 if(sessionID)  {
@@ -11,7 +13,7 @@ if(sessionID)  {
     socket.auth = { sessionID }
     socket.connect()
 } else {
-    const username = "DefaultUser";
+    const username = "15550900270";
     socket.auth = { username }
     socket.connect()
 }
