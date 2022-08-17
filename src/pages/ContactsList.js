@@ -1,11 +1,14 @@
 import Contacts from "./Contact";
 import './ContactsList.css'
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
+import Modal from "../components/ContactModal/Modal";
 
 const ContactsList = () => {
+
+    const [openModal, setOpenModal] = useState(false)
 
     const dispatch = useDispatch();
     useEffect( ()=>{
@@ -17,6 +20,8 @@ const ContactsList = () => {
 
     return (
         <div className="container-x1">
+            {openModal && <Modal closeModal = {setOpenModal}/>}
+
             <div className="table-responsive">
                 <div className="table-wrapper">
                     <div className="table-title">
@@ -27,6 +32,7 @@ const ContactsList = () => {
                             <div className="col-sm-6">
                                 <button
                                     className="openModalBtn"
+                                    onClick={() => {setOpenModal(true)}}
                                 >
                                     Add new contact
                                     </button>
@@ -48,7 +54,6 @@ const ContactsList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            
                                 {
                                     contactsList.map(contact => (
                                         <tr key={contact._id}>
@@ -61,6 +66,7 @@ const ContactsList = () => {
                     </table>
                 </div>
             </div>
+            
         </div>
     )
 }

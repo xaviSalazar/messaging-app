@@ -13,9 +13,10 @@ function App() {
   return (
     <>
     <Router basename={process.env.PUBLIC_URL}>
-    <Navbar/>
+    
     <div className="app">
     <div className="app_body"> 
+    <Navbar/>
       <Routes>
           <Route path='/' exact element = {<MessagingPage />} />
           <Route path='/settings' exact element = {<Settings />} />
