@@ -4,11 +4,14 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
-import Modal from "../components/ContactModal/Modal";
+import {Modal, MyForm} from "../components/ContactModal/Modal";
+//import MyForm from "../components/ContactModal/Modal";
+
 
 const ContactsList = () => {
 
     const [openModal, setOpenModal] = useState(false)
+    const [openForm, setOpenForm] = useState(false)
 
     const dispatch = useDispatch();
     useEffect( ()=>{
@@ -20,7 +23,10 @@ const ContactsList = () => {
 
     return (
         <div className="container-x1">
-            {openModal && <Modal closeModal = {setOpenModal}/>}
+            {/* <MyForm/> */}
+
+            {openForm ? <MyForm closeForm = {setOpenForm}/> :
+            // {openModal ? <Modal closeModal = {setOpenModal}/> :
 
             <div className="table-responsive">
                 <div className="table-wrapper">
@@ -32,7 +38,7 @@ const ContactsList = () => {
                             <div className="col-sm-6">
                                 <button
                                     className="openModalBtn"
-                                    onClick={() => {setOpenModal(true)}}
+                                    onClick={() => {setOpenForm(true)}}
                                 >
                                     Add new contact
                                     </button>
@@ -66,6 +72,7 @@ const ContactsList = () => {
                     </table>
                 </div>
             </div>
+            }
             
         </div>
     )
