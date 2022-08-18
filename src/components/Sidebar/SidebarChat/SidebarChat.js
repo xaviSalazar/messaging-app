@@ -4,6 +4,7 @@ import './SidebarChat.css'
 import { useDispatch } from 'react-redux';
 import { useSelector } from "react-redux";
 import { getMessagesFromChannel } from '../../../redux/GetMessages/Actions'
+//import { newIncomingMessage } from '../../../redux/NewMessages/Actions'
 
 const filterMessages = (userMessages, setShowInfo, userData) => {
     
@@ -27,7 +28,8 @@ const filterMessages = (userMessages, setShowInfo, userData) => {
 const SidebarChat = (props) => {
 
     const dispatch = useDispatch();
-    const userMessages  = useSelector((state) => state.getMessagesFromChannel);
+    //const userMessages  = useSelector((state) => state.getMessagesFromChannel);
+    const newMessages = useSelector((state) => state.newIncomingMessage)
     const { userData, setChat} = props;
     const [ showInfo, setShowInfo ] = useState({})
 
@@ -40,8 +42,9 @@ const SidebarChat = (props) => {
     }
 
     useEffect(() => {
-        filterMessages(userMessages, setShowInfo, userData)
-    }, [userMessages, userData])
+        //filterMessages(userMessages, setShowInfo, userData)
+        filterMessages(newMessages, setShowInfo, userData)
+    }, [newMessages, userData])
 
     return (
         <div className = "sidebarChat" onClick = {setMessageAndChat}>

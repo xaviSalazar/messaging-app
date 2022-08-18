@@ -7,9 +7,8 @@ import './utils/Messagebox'
 import Messagebox from './utils/Messagebox';
 import { httpManager } from '../../managers/httpManager';
 import { useSelector } from "react-redux";
-//import { useDispatch } from 'react-redux';
-import { getMessagesFromChannel } from '../../redux/GetMessages/Actions'
-
+import { useDispatch } from 'react-redux';
+import { newIncomingMessage } from '../../redux/NewMessages/Actions'
 var testeo = true;
 
 const reducer = (state, action) => {
@@ -31,7 +30,7 @@ const reducer = (state, action) => {
 const Chat = (props) => {
 
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
-    //const dispatch = useDispatch();
+    const disparar = useDispatch();
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
     const [message, SetMessage] = useState("");
@@ -54,6 +53,7 @@ const Chat = (props) => {
             //console.log(`${trigger}, ${from}, ${msg}`)
             console.log("dentro de listener cote chat");
             //dispatch(getMessagesFromChannel(from))   
+            disparar(newIncomingMessage(messages))
             if(selectedChat)
             {
                 if(selectedChat.phoneNumber === messages.from) {
@@ -61,6 +61,7 @@ const Chat = (props) => {
                     console.log('entro en true')
                     testeo = true;
                 } 
+                
             }
             // console.log(userMessages)       
         };
@@ -70,7 +71,7 @@ const Chat = (props) => {
             socket.off('user_answered')
             console.log('desabonnement')  
     }
-    }, [socket, selectedChat])
+    }, [socket, selectedChat, disparar])
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 

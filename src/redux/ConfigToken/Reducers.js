@@ -5,7 +5,6 @@ const initialState = {
 
 
 export default (number = initialState, action) => {
-
     switch( action.type ) {
         case 'SET-CONFIG':
             console.log(action.payload)
@@ -13,5 +12,4 @@ export default (number = initialState, action) => {
         default:
             return number;
     }
-
 } 
