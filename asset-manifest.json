@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/messaging-app/static/css/main.2344f134.css",
+    "main.js": "/messaging-app/static/js/main.38d5ca50.js",
+    "index.html": "/messaging-app/index.html",
+    "main.2344f134.css.map": "/messaging-app/static/css/main.2344f134.css.map",
+    "main.38d5ca50.js.map": "/messaging-app/static/js/main.38d5ca50.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2344f134.css",
+    "static/js/main.38d5ca50.js"
+  ]
+}
