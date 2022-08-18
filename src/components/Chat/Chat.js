@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, {useEffect, useState, useReducer } from 'react';
 import { Avatar, IconButton } from '@material-ui/core';
 import './Chat.css';
 import { AttachFile, MoreVert, SearchOutlined, InsertEmoticon } from '@material-ui/icons';
@@ -7,23 +7,42 @@ import './utils/Messagebox'
 import Messagebox from './utils/Messagebox';
 import { httpManager } from '../../managers/httpManager';
 import { useSelector } from "react-redux";
-import { useDispatch } from 'react-redux';
+//import { useDispatch } from 'react-redux';
 import { getMessagesFromChannel } from '../../redux/GetMessages/Actions'
 
 var testeo = true;
 
+const reducer = (state, action) => {
+
+    if(action.type === "ADD_MESSAGE") {
+        const new_message = action.payload;
+        console.log(new_message)
+        state.push(new_message)
+        return [...state]        
+    }
+
+    if( action.type === "LOAD_MESSAGES" ) {
+        const messages = action.payload;
+        return [...messages]
+    }
+
+}
+
 const Chat = (props) => {
 
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
     const [message, SetMessage] = useState("");
-   
 
+    const [messagesList, dispatch] = useReducer(reducer, []);
+   
     console.log("rendering chat component")
     useEffect(() => {
-        if(!testeo)setMessageList(userMessages);
+        // if(!testeo)setMessageList(userMessages);
+        // load initial data 
+        if(!testeo) dispatch({type: "LOAD_MESSAGES", payload: userMessages})
     }, [userMessages])
     
     useEffect(() => {
@@ -31,16 +50,17 @@ const Chat = (props) => {
         //setMessageList(userMessages);
         if(selectedChat) testeo=false;
 
-        const eventListener = ({ trigger, from, msg}) => {
-            console.log(`${trigger}, ${from}, ${msg}`)
+        const eventListener = ({ messages }) => {
+            //console.log(`${trigger}, ${from}, ${msg}`)
             console.log("dentro de listener cote chat");
-            dispatch(getMessagesFromChannel(from))   
+            //dispatch(getMessagesFromChannel(from))   
             if(selectedChat)
             {
-            if(selectedChat.phoneNumber !== from) {
-                console.log('entro en true')
-                testeo = true;
-            } 
+                if(selectedChat.phoneNumber === messages.from) {
+                    dispatch({ type: "ADD_MESSAGE", payload: messages})
+                    console.log('entro en true')
+                    testeo = true;
+                } 
             }
             // console.log(userMessages)       
         };
@@ -50,7 +70,7 @@ const Chat = (props) => {
             socket.off('user_answered')
             console.log('desabonnement')  
     }
-    }, [socket, selectedChat, dispatch])
+    }, [socket, selectedChat])
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
@@ -94,7 +114,8 @@ const Chat = (props) => {
         })
 
         messages.push(msgReqData);
-        setMessageList(messages)
+        dispatch({ type: "ADD_MESSAGE", payload: msgReqData})
+        //setMessageList(messages)
         SetMessage("");
     }
 
@@ -137,7 +158,7 @@ const Chat = (props) => {
                 <button onClick={deleteALl}> Delete Messages</button>
 
                 {
-                    messageList.map((userDataMessage, index) => (
+                    messagesList.map((userDataMessage, index) => (
                         <Messagebox key = {index} userDataMessage = {userDataMessage}/>
                     ))   
                 }
