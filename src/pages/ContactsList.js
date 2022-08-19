@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
-import {Modal, MyForm} from "../components/ContactModal/Modal";
+import { MyForm } from "../components/ContactModal/Modal";
 //import MyForm from "../components/ContactModal/Modal";
 import { httpManager } from '../managers/httpManager';
 
 
 const ContactsList = () => {
 
-    const [openModal, setOpenModal] = useState(false)
+    //const [openModal, setOpenModal] = useState(false)
     const [openForm, setOpenForm] = useState(false)
     // track checked items
     const [checked, setChecked] = useState([]);
