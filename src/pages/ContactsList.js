@@ -6,12 +6,27 @@ import { useDispatch } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
 import {Modal, MyForm} from "../components/ContactModal/Modal";
 //import MyForm from "../components/ContactModal/Modal";
+import { httpManager } from '../managers/httpManager';
 
 
 const ContactsList = () => {
 
     const [openModal, setOpenModal] = useState(false)
     const [openForm, setOpenForm] = useState(false)
+    // track checked items
+    const [checked, setChecked] = useState([]);
+
+    // Add/Remove checked item from list
+    const handleCheck = (event) => {
+        var updatedList = [...checked];
+        if (event.target.checked) {
+        updatedList = [...checked, event.target.value];
+        console.log(updatedList)
+        } else {
+        updatedList.splice(checked.indexOf(event.target.value), 1);
+        }
+        setChecked(updatedList)
+    };
 
     const dispatch = useDispatch();
     useEffect( ()=>{
@@ -20,6 +35,27 @@ const ContactsList = () => {
           }, [dispatch])
 
     const contactsList  = useSelector((state) => state.getUsers);
+
+    const SendMessage = async () => {
+
+        let phone = checked.pop()
+        console.log(phone);
+
+        if(typeof phone === 'undefined') return;
+
+        const msgReqData ={
+            name: "DefaultUser",
+            mensaje: "prueba",
+            to: phone,
+            from: "15550900270",
+            addedOn: new Date().getTime(),
+            senderID: 0
+        };
+
+        await httpManager.sendBusinessMessage({
+                    messages: msgReqData
+                })
+    }
 
     return (
         <div className="container-x1">
@@ -37,11 +73,17 @@ const ContactsList = () => {
                             </div>
                             <div className="col-sm-6">
                                 <button
+                                    className="sendBtn"
+                                    onClick={SendMessage}
+                                >
+                                    Send First Business Message
+                                </button>
+                                <button
                                     className="openModalBtn"
                                     onClick={() => {setOpenForm(true)}}
                                 >
                                     Add new contact
-                                    </button>
+                                </button>
                                 {/* <a href="#addEmployeeModal" className="btn btn-success" data-toggle="modal">
                                     <i className="material-icons">&#xE147;</i> 
                                     <span>Add New Employee</span>
@@ -52,6 +94,7 @@ const ContactsList = () => {
                     <table className="table table-striped table-hover">
                         <thead>
                             <tr>
+                                <th>Select Item</th>
                                 <th>Name</th>
                                  <th>Email</th>
                                 {/*<th>Address</th> */}
@@ -63,6 +106,7 @@ const ContactsList = () => {
                                 {
                                     contactsList.map(contact => (
                                         <tr key={contact._id}>
+                                            <td><input value={contact.phoneNumber} type="checkbox" onChange={handleCheck} /></td>
                                             <Contacts contact={contact}/>
                                         </tr>
                                     ))

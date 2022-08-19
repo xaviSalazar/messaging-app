@@ -27,7 +27,19 @@
 	color: white;
 	cursor: pointer;
 	position: relative;
-	left:80%
+	left:60%
+  }
+
+  .sendBtn {
+	width: 200px;
+	height: 40px;
+	border: none;
+	border-radius: 6px;
+	background-color: cornflowerblue;
+	color: white;
+	cursor: pointer;
+	position: relative;
+	right:0%
   }
 
 .table-title h2 {
