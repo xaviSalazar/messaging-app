@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/messaging-app/static/css/main.2344f134.css",
-    "main.js": "/messaging-app/static/js/main.191bbe88.js",
+    "main.css": "/messaging-app/static/css/main.53d954ae.css",
+    "main.js": "/messaging-app/static/js/main.aac4af6a.js",
     "index.html": "/messaging-app/index.html",
-    "main.2344f134.css.map": "/messaging-app/static/css/main.2344f134.css.map",
-    "main.191bbe88.js.map": "/messaging-app/static/js/main.191bbe88.js.map"
+    "main.53d954ae.css.map": "/messaging-app/static/css/main.53d954ae.css.map",
+    "main.aac4af6a.js.map": "/messaging-app/static/js/main.aac4af6a.js.map"
   },
   "entrypoints": [
-    "static/css/main.2344f134.css",
-    "static/js/main.191bbe88.js"
+    "static/css/main.53d954ae.css",
+    "static/js/main.aac4af6a.js"
   ]
 }
