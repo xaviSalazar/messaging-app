@@ -7,6 +7,10 @@ import { getUsers } from '../redux/GetUsers/UsersAction';
 import { MyForm } from "../components/ContactModal/Modal";
 //import MyForm from "../components/ContactModal/Modal";
 import { httpManager } from '../managers/httpManager';
+import { Button } from "@material-ui/core";
+import { Send } from "@material-ui/icons";
+import { AddCircleOutlineOutlined } from "@material-ui/icons";
+
 
 
 const ContactsList = () => {
@@ -69,21 +73,26 @@ const ContactsList = () => {
                     <div className="table-title">
                         <div className="row">
                             <div className="col-sm-6">
-                                <h2>Edit <b>Contacts</b></h2>
+                                <h2>Start your first Business Message</h2>
                             </div>
+                            <br/>
                             <div className="col-sm-6">
-                                <button
-                                    className="sendBtn"
+                                <Button
+                                    //className="sendBtn"
+                                    variant="contained"
                                     onClick={SendMessage}
+                                    startIcon={<Send/>}
                                 >
-                                    Send First Business Message
-                                </button>
-                                <button
+                                    Start Message 
+                                </Button>
+                                <Button
                                     className="openModalBtn"
+                                    variant="contained"
                                     onClick={() => {setOpenForm(true)}}
+                                    startIcon={<AddCircleOutlineOutlined/>}
                                 >
                                     Add new contact
-                                </button>
+                                </Button>
                                 {/* <a href="#addEmployeeModal" className="btn btn-success" data-toggle="modal">
                                     <i className="material-icons">&#xE147;</i> 
                                     <span>Add New Employee</span>
