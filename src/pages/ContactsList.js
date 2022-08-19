@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
 import {Modal, MyForm} from "../components/ContactModal/Modal";
 //import MyForm from "../components/ContactModal/Modal";
+import { httpManager } from '../managers/httpManager';
 
 
 const ContactsList = () => {
@@ -35,6 +36,27 @@ const ContactsList = () => {
 
     const contactsList  = useSelector((state) => state.getUsers);
 
+    const SendMessage = async () => {
+
+        let phone = checked.pop()
+        console.log(phone);
+
+        if(typeof phone === 'undefined') return;
+
+        const msgReqData ={
+            name: "DefaultUser",
+            mensaje: "prueba",
+            to: phone,
+            from: "15550900270",
+            addedOn: new Date().getTime(),
+            senderID: 0
+        };
+
+        await httpManager.sendBusinessMessage({
+                    messages: msgReqData
+                })
+    }
+
     return (
         <div className="container-x1">
             {/* <MyForm/> */}
@@ -52,6 +74,7 @@ const ContactsList = () => {
                             <div className="col-sm-6">
                                 <button
                                     className="sendBtn"
+                                    onClick={SendMessage}
                                 >
                                     Send First Business Message
                                 </button>

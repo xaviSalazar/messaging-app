@@ -31,6 +31,10 @@ const deleteALlMsg = async(channel_id) => {
     return await axios.get(`${API_BASE_URL}/delete-messages?channel_id=${channel_id}`)
 }
 
+const sendBusinessMessage = async(requestData) => {
+    return await axios.post(`${API_BASE_URL}/init-conversation`, requestData)
+}
+
 export const httpManager = {
     createUser,
     searchUser,
@@ -38,5 +42,6 @@ export const httpManager = {
     getChannelList,
     sendMessage,
     getAllUsers,
-    deleteALlMsg
+    deleteALlMsg,
+    sendBusinessMessage
 };
