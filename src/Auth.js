@@ -17,12 +17,17 @@ const Auth = ({authRoute, redirectTo, children}) => {
 
 
 useEffect(() => {
+    console.log("here")
     dispatch(doCustomerAuth()).then( async (response) => {
+        
        if(! response.payload.data.success) {
-            if(authRoute) {
+        console.log(`inside false de success`)
+           if(authRoute) {
                 navigate(redirectTo);
-            }
+           }
+            
        } else {
+        console.log(`inside false`)
          if(!authRoute) {
             navigate(redirectTo)
          }

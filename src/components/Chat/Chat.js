@@ -77,7 +77,7 @@ const Chat = (props) => {
         e.preventDefault(); 
         if (message === '') return;
         let channelId = "";
-        
+        // creates new conversation channel between two persons
         if(!messageList || !messageList.length) {
             
             const channelUsers = [{
@@ -99,6 +99,7 @@ const Chat = (props) => {
         }
     
         const messages = [...messageList];
+        // message I want to send to 
         const msgReqData ={
             name: "DefaultUser",
             message,

@@ -11,14 +11,12 @@ import Auth from "./Auth"
 import {useSelector} from 'react-redux'
 
 
-
-
 function App() {
  
   let auth = useSelector(state => state.customerReducer.auth)
   console.log('rendering app')
   if(auth)
-    console.log(auth.data.responseData.lastName)
+    console.log(auth?.data?.responseData?.lastName)
    
   // set variables to use within whatsapp
   return (
@@ -28,15 +26,10 @@ function App() {
     <div className="app_body"> 
     <Navbar/>
       <Routes>
-        <Route path="/"element = {<Auth redirectTo="/"><MessagingPage/></Auth>} />
+        <Route path="/"element = {<Auth redirectTo="/login"> {auth?.data?.success?<MessagingPage/>:null} </Auth>} />
         <Route path="/login"element = {<Auth redirectTo="/"><Login/></Auth>} />
-        <Route path='/settings' element = {<Auth redirectTo="/"><Settings /></Auth>} />
-        <Route path='/contacts' element = {<Auth redirectTo="/"><ContactsList/></Auth>} />
-          {/* <Route path='/' exact element= {loggedIn? <MessagingPage/> : null} /> 
-          <Route path='/login' exact element = {<Login setLoggedIn={setLoggedIn}/>} />
-          <Route path='/register' exact element = {<Register />} />       
-          <Route path='/settings' exact element = {<Settings />} />
-          <Route path='/contacts' exact element = {<ContactsList/>} /> */}
+        <Route path='/settings' element = {<Auth redirectTo="/login"><Settings /></Auth>} />
+        <Route path='/contacts' element = {<Auth redirectTo="/login"><ContactsList/></Auth>} />
       </Routes>
       </div>
       </div>

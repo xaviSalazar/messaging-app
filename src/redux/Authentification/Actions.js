@@ -1,5 +1,5 @@
-import { registerCustomer, loginCustomer, customerAuth } from "../../api";
-import {CUSTOMER_REGISTER, CUSTOMER_LOGIN, CUSTOMER_AUTH} from './types'
+import { registerCustomer, loginCustomer, customerAuth, customerLogOut } from "../../api";
+import {CUSTOMER_REGISTER, CUSTOMER_LOGIN, CUSTOMER_AUTH, CUSTOMER_LOGOUT} from './types'
 
 
 export const doRegisterCustomer = (data) => async(dispatch) => {
@@ -48,6 +48,28 @@ export const doCustomerAuth = (data) => async(dispatch) => {
         dispatch( {type: CUSTOMER_AUTH, payload: customerData})
 
         return {type: CUSTOMER_AUTH,payload: customerData}
+
+    } catch(error) {
+        return error.response.data
+    }
+
+}
+
+
+export const doCustomerLogout = (data) => async(dispatch) => {
+
+    const token = localStorage.getItem('customerToken');
+    const config = {
+        headers: {Authorization: `Bearer ${token}`}
+    }
+
+
+    try {
+        const customerData = await customerLogOut(config);
+
+        dispatch( {type: CUSTOMER_LOGOUT, payload: customerData})
+
+        return {type: CUSTOMER_LOGOUT, payload: customerData}
 
     } catch(error) {
         return error.response.data
