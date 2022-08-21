@@ -20,8 +20,8 @@ const createChannel = async (requestData) => {
     return await axios.post(`${API_BASE_URL}/channel`, requestData)
 };
 
-const getChannelList = async (phoneNumber) => {
-    return await axios.get(`${API_BASE_URL}/channel-list?phoneNumber=${phoneNumber}`)
+const getChannelList = async (userId) => {
+    return await axios.get(`${API_BASE_URL}/channel-list?userId=${userId}`)
 };
 
 const sendMessage = async (requestData) => {
