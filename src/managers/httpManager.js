@@ -3,6 +3,11 @@ import axios from "axios"
 //const API_BASE_URL = "http://localhost:3001";
 const API_BASE_URL = "https://whatsapp-cloud-backend.herokuapp.com";
 
+// do functions to register users
+const registerCustomer = async (data) => {
+    return await axios.post(`${API_BASE_URL}/register`, data)
+}
+
 const createUser = async (userData) => {
    return await axios.post(`${API_BASE_URL}/user`, userData)
 }
@@ -43,5 +48,6 @@ export const httpManager = {
     sendMessage,
     getAllUsers,
     deleteALlMsg,
-    sendBusinessMessage
+    sendBusinessMessage,
+    registerCustomer
 };
