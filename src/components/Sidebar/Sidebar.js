@@ -19,6 +19,7 @@ const Sidebar = (props) => {
     const [searchString, setSearchString] = useState("");
     // use selectors
     const contactList  = useSelector((state) => state.getUsers);
+    let auth = useSelector(state => state.customerReducer.auth)
     console.log("rendering")
 
     const onSearchTextChanged = async (searchText) => {
@@ -31,7 +32,11 @@ const Sidebar = (props) => {
     return (
         <div className="sidebar">
             <div className="sidebar__header">
-                 <Avatar src="https://pbs.twimg.com/profile_images/1020939891457241088/fcbu814K_400x400.jpg"/>
+                <h> {auth?.data?.responseData?.lastName }</h>
+                <h> {auth?.data?.responseData?.firstName} </h>
+                <h> {auth?.data?.responseData?.email} </h>
+                 {/* <Avatar src="https://pbs.twimg.com/profile_images/1020939891457241088/fcbu814K_400x400.jpg">
+                </Avatar> */}
                <div className="sidebar__headerRight">
                     <IconButton>
                         <DonutLargeIcon/>

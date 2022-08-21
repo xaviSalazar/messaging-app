@@ -12,9 +12,9 @@ import { Send } from "@material-ui/icons";
 import { AddCircleOutlineOutlined } from "@material-ui/icons";
 
 
-
 const ContactsList = () => {
 
+    let auth = useSelector(state => state.customerReducer.auth)
     //const [openModal, setOpenModal] = useState(false)
     const [openForm, setOpenForm] = useState(false)
     // track checked items
@@ -35,7 +35,7 @@ const ContactsList = () => {
     const dispatch = useDispatch();
     useEffect( ()=>{
             console.log("useeffect CONTACTS LIS js")
-            dispatch(getUsers("eltia"))
+            dispatch(getUsers(auth?.data?.responseData?._id))
           }, [dispatch])
 
     const contactsList  = useSelector((state) => state.getUsers);

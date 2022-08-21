@@ -5,6 +5,9 @@ import { useDispatch } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
 import socket from '../managers/socketioManager'
 
+import { useSelector } from "react-redux";
+
+
 
 // function to store a key with a time
 const setWithExpiry = (key, value, ttl) => {
@@ -65,10 +68,12 @@ socket.on("session", ({sessionID, userID}) => {
 
 const MessagingPage = () => {
 
+    let auth = useSelector(state => state.customerReducer.auth)
+
     const dispatch = useDispatch();
     useEffect( ()=>{
             console.log("useeffect Messaging js")
-            dispatch(getUsers("eltia"))
+            dispatch(getUsers(auth?.data?.responseData?._id))
           }, [dispatch])
 
     const [selectedChat, setChat] = useState();

@@ -38,7 +38,7 @@ const SidebarChat = (props) => {
     const setMessageAndChat = async () => {
         setChat(userData);
         // console.log(userData)
-        dispatch(getMessagesFromChannel(userData.phoneNumber))
+        dispatch(getMessagesFromChannel(userData._id))
     }
 
     useEffect(() => {

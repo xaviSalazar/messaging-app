@@ -1,19 +1,37 @@
 import React from "react";
 import './Modal.css'
 import { useState } from 'react'
+import {createUser} from '../../api/index'
+import {useSelector} from 'react-redux'
+
 
 function MyForm({ closeForm }) {
-    const [inputs, setInputs] = useState({});
 
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs(values => ({ ...values, [name]: value }))
-    }
+    const [phoneNumber, setPhoneNumber] = useState({});
+    const [name, setName] = useState({});
+
+    let auth = useSelector(state => state.customerReducer.auth)
+    //console.log(auth?.data?.responseData?.lastName)
+
+    const inputPhoneNum = (typedText) =>{
+        setPhoneNumber(typedText);
+    } 
+
+    const inputName = (typedText) =>{
+        setName(typedText)
+    } 
 
     const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log(inputs);
+      event.preventDefault();
+
+      const data = {
+        name: name,
+        phoneNumber: phoneNumber,
+        owner: auth.data.responseData._id
+      }
+
+     //console.log(data)
+     createUser(data);
     }
 
     return (
@@ -26,18 +44,20 @@ function MyForm({ closeForm }) {
                     <label> Enter Contact Name:
                         <input
                             type="text"
-                            name="name"
-                            value={inputs.name || ""}
-                            onChange={handleChange}
+                            //name="name"
+                            //value={inputs.uname || ""}
+                            name = "uname" required
+                            onChange={(e) => inputName(e.target.value)}
                         />
                     </label>
 
                     <label> Enter phone number:
                         <input
                             type="text"
-                            name="phoneNumber"
-                            value={inputs.phoneNumber || ""}
-                            onChange={handleChange}
+                            // name="phoneNumber"
+                            // value={inputs.uphone || ""}
+                            onChange={(e) => inputPhoneNum(e.target.value)}
+                            name = "uphone" required
                         />
                     </label>
                     <input type="submit" />

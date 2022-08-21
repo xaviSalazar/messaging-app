@@ -30,6 +30,7 @@ const reducer = (state, action) => {
 const Chat = (props) => {
 
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
+    let auth = useSelector(state => state.customerReducer.auth);
     const disparar = useDispatch();
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
@@ -82,10 +83,12 @@ const Chat = (props) => {
             
             const channelUsers = [{
                 name: selectedChat.name,
-                phoneNumber: selectedChat.phoneNumber
+                phoneNumber: selectedChat.phoneNumber,
+                userId: selectedChat._id            
             },{
-                name: "DefaultUser",
-                phoneNumber: "15550900270"
+                name: auth?.data?.responseData?.lastName,
+                phoneNumber: "15550900270",
+                userId: auth?.data?.responseData?._id,
             }];
             console.log("=====", channelUsers)
             const channelResponse = await httpManager.createChannel({channelUsers});
@@ -93,7 +96,8 @@ const Chat = (props) => {
             channelId = channelResponse.data.responseData._id;
             console.log("=====", channelId);         
         } else {
-            const receiveId = await httpManager.getChannelList(selectedChat.phoneNumber);
+            console.log(selectedChat._id)
+            const receiveId = await httpManager.getChannelList(selectedChat._id);
             console.log(receiveId);
             channelId = receiveId.data.responseData[0]._id;
         }
@@ -101,7 +105,7 @@ const Chat = (props) => {
         const messages = [...messageList];
         // message I want to send to 
         const msgReqData ={
-            name: "DefaultUser",
+            name: auth?.data?.responseData?.lastName,
             message,
             to: selectedChat.phoneNumber,
             from: "15550900270",
@@ -117,7 +121,6 @@ const Chat = (props) => {
 
         messages.push(msgReqData);
         dispatch({ type: "ADD_MESSAGE", payload: msgReqData})
-        //setMessageList(messages)
         SetMessage("");
     }
 
@@ -128,7 +131,7 @@ const Chat = (props) => {
     const deleteALl = async () => {
             setMessageList([]);
             let channelId;
-            const receiveId = await httpManager.getChannelList(selectedChat.phoneNumber);
+            const receiveId = await httpManager.getChannelList(selectedChat._id);
             console.log(receiveId);
             channelId = receiveId.data.responseData[0]._id;
             await httpManager.deleteALlMsg(channelId);
