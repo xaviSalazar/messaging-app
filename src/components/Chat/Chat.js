@@ -31,6 +31,8 @@ const Chat = (props) => {
 
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
     let auth = useSelector(state => state.customerReducer.auth);
+    let configsTokens = useSelector(state => state.configTokenReducer)
+    console.log(configsTokens)
     const disparar = useDispatch();
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
@@ -114,7 +116,16 @@ const Chat = (props) => {
         };
         console.log("verificar ", channelId)
 
+        
+        const saved = localStorage.getItem("whatsapp_app");
+        if(!saved){ alert('insertar tokens primero'); return}
+        const configs = JSON.parse(saved);
+        const tokenId = configs.token;
+        const numberId = configs.phoneId
+
         await httpManager.sendMessage({
+            tokenId,
+            numberId,
             channelId,
             messages: msgReqData
         })
