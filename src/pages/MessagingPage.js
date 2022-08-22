@@ -37,11 +37,8 @@ const getWithExpiry = (key) => {
     return item.value
 }
 
-//
-const sessionID = getWithExpiry("sessionID")
 // retrieve sessionID: should be the phoneNumber
-//const sessionID = localStorage.getItem("sessionID")
-// 
+const sessionID = getWithExpiry("sessionID")
 
 if(sessionID)  {
     console.log(`inside sessionID: ${sessionID}`)
@@ -64,7 +61,6 @@ socket.on("session", ({sessionID, userID}) => {
     socket.userID = userID
   
 })
-
 
 const MessagingPage = () => {
 
