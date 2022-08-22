@@ -32,9 +32,9 @@ const Sidebar = (props) => {
     return (
         <div className="sidebar">
             <div className="sidebar__header">
-                <h> {auth?.data?.responseData?.lastName }</h>
-                <h> {auth?.data?.responseData?.firstName} </h>
-                <h> {auth?.data?.responseData?.email} </h>
+                <h1> {auth?.data?.responseData?.lastName }</h1>
+                <h1> {auth?.data?.responseData?.firstName} </h1>
+                <h1> {auth?.data?.responseData?.email} </h1>
                  {/* <Avatar src="https://pbs.twimg.com/profile_images/1020939891457241088/fcbu814K_400x400.jpg">
                 </Avatar> */}
                <div className="sidebar__headerRight">

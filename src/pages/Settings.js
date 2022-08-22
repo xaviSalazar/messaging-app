@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux';
-import { configPhoneNumber } from "../redux/ConfigToken/Actions";
 import EditIcon from '@material-ui/icons/Edit';
 import {  IconButton } from '@material-ui/core';
 import { Button } from "@material-ui/core";
-import { PersonalVideo } from "@material-ui/icons";
+import {doSaveTokens} from "../redux/ConfigToken/Actions"
             
 
 const Settings = () => {
@@ -12,20 +11,25 @@ const Settings = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [token, setToken] = useState('')
     const [phoneId, setPhoneId] = useState('')
+    const dispatch = useDispatch()
     // local state to input
     const [isDisabled, setIsDisabled] = useState({ phone_num: true, what_token: true, phone_id: true});
-    const [inputValues, setInputValues] = useState({ phoneNumber: "inserte numero", what_token: "inserte token", phone_id: "inserte phone id" });
 
     useEffect(() => { 
 
         const itemStr = localStorage.getItem("whatsapp_app")
+
         if(!itemStr) 
         {
             return;
         }
+      
+        console.log('renderiza useEFFECT')
         const item = JSON.parse(itemStr);
-       // setInputValues({ phoneNumber: item.phoneNumber, what_token: item.token })
-
+        setPhoneNumber(item.phoneNumber);
+        setToken(item.token);
+        setPhoneId(item.phoneId);
+        //setInputValues(item)
     }, [])
 
     const handleClick = ( value ) => {
@@ -47,10 +51,24 @@ const Settings = () => {
        
     }
 
+    const handleChangePhoneNumber = event => {
+        setPhoneNumber(event.target.value);
+        //console.log('PHONE NUM value is:', phoneNumber);
+      };
+
+    const handleChangeToken = event => {
+        setToken(event.target.value);
+        //console.log('TOKEN value is:', token);
+    };
+
+    const handleChangeId = event => {
+        setPhoneId(event.target.value);
+        //console.log('PHONEID value is:', phoneId);
+    };
+
 
     const setConfigurations = () => {
-
-        if( phoneNumber && token)
+        if( phoneNumber && token && phoneId)
         {
             console.log('clicked')
 
@@ -60,19 +78,16 @@ const Settings = () => {
                 phoneId : phoneId
             }
 
-            localStorage.setItem("whatsapp_app", JSON.stringify(config))
-            alert("saved data")
-
+            dispatch(doSaveTokens(config))
         }
     }
-
 
     return (
         <div className="settings-app">
             <label >
                 Insert phone number:
             </label>
-            <input type="text" value = {inputValues.phoneNumber} disabled = {isDisabled.phone_num} onChange={(e) => setPhoneNumber(e.target.value)}/>
+            <input type="text"  disabled = {isDisabled.phone_num} onChange={handleChangePhoneNumber} value = {phoneNumber}/>
             <IconButton onClick = {() => handleClick('phone_num')}>
              <EditIcon/>
             </IconButton>
@@ -80,7 +95,7 @@ const Settings = () => {
             <label >
                 Insert secret token:
             </label>
-            <input type="text" value = {inputValues.what_token} disabled = {isDisabled.what_token} onChange={(e) => setToken(e.target.value)}/>
+            <input type="text" disabled = {isDisabled.what_token} onChange={handleChangeToken} value = {token}/>
             <IconButton onClick = {() => handleClick('what_token')}>
              <EditIcon/>
             </IconButton>
@@ -88,7 +103,7 @@ const Settings = () => {
             <label >
                 Insert number id:
             </label>
-            <input type="text" value = {inputValues.phone_id} disabled = {isDisabled.phone_id} onChange={(e) => setPhoneId(e.target.value)}/>
+            <input type="text" disabled = {isDisabled.phone_id} onChange={handleChangeId} value = {phoneId}/>
             <IconButton onClick = {() => handleClick('phone_id')}>
              <EditIcon/>
             </IconButton>
