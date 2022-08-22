@@ -1,15 +1,22 @@
+import {SAVE_CONFIG_TOKENS} from './types'
+
 const initialState = {
     phoneNumber : "",
-    token : ""
+    token : "",
+    phoneId : ""
 }
 
+const configTokenReducer = (config = initialState, action) => {
 
-export default (number = initialState, action) => {
     switch( action.type ) {
-        case 'SET-CONFIG':
-            console.log(action.payload)
+        case SAVE_CONFIG_TOKENS:
             return action.payload
+
         default:
-            return number;
+            const tokens = localStorage.getItem("whatsapp_app")
+            if(tokens) return tokens
+            else return config;
     }
 } 
+
+export default configTokenReducer;

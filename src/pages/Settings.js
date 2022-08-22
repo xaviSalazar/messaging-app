@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux';
-import { configPhoneNumber } from "../redux/ConfigToken/Actions";
 import EditIcon from '@material-ui/icons/Edit';
 import {  IconButton } from '@material-ui/core';
 import { Button } from "@material-ui/core";
-import { PersonalVideo } from "@material-ui/icons";
+import {doSaveTokens} from "../redux/ConfigToken/Actions"
             
 
 const Settings = () => {
@@ -12,6 +11,7 @@ const Settings = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [token, setToken] = useState('')
     const [phoneId, setPhoneId] = useState('')
+    const dispatch = useDispatch()
     // local state to input
     const [isDisabled, setIsDisabled] = useState({ phone_num: true, what_token: true, phone_id: true});
 
@@ -68,7 +68,7 @@ const Settings = () => {
 
 
     const setConfigurations = () => {
-        if( phoneNumber && token)
+        if( phoneNumber && token && phoneId)
         {
             console.log('clicked')
 
@@ -78,8 +78,7 @@ const Settings = () => {
                 phoneId : phoneId
             }
 
-            localStorage.setItem("whatsapp_app", JSON.stringify(config))
-            alert("saved data")
+            dispatch(doSaveTokens(config))
         }
     }
 

@@ -37,42 +37,46 @@ const getWithExpiry = (key) => {
     return item.value
 }
 
-// retrieve sessionID: should be the phoneNumber
 const sessionID = getWithExpiry("sessionID")
 
 if(sessionID)  {
     console.log(`inside sessionID: ${sessionID}`)
+    console.log(sessionID)
     socket.auth = { sessionID }
     socket.connect()
 } else {
-    const username = "15550900270";
+    const tokens = localStorage.getItem("whatsapp_app")
+    const item = JSON.parse(tokens);
+    const username = item.phoneNumber
+    console.log(username)
     socket.auth = { username }
     socket.connect()
 }
 
 socket.on("session", ({sessionID, userID}) => {
-    // attach the session ID to the next reconnection attemps
-    socket.auth = { sessionID };
-    console.log(`sessionID ${sessionID}, userID ${userID}`)
-    //store it in localStorage
-    const appi = setWithExpiry("sessionID", sessionID, 900000);
-    //localStorage.setItem("sessionID", sessionID);
-    //save the ID of the user
-    socket.userID = userID
-  
+// attach the session ID to the next reconnection attemps
+socket.auth = { sessionID };
+console.log(`sessionID ${sessionID}, userID ${userID}`)
+//store it in localStorage
+const appi = setWithExpiry("sessionID", sessionID, 900000);
+//localStorage.setItem("sessionID", sessionID);
+//save the ID of the user
+socket.userID = userID
 })
+
 
 const MessagingPage = () => {
 
     let auth = useSelector(state => state.customerReducer.auth)
-
-    const dispatch = useDispatch();
-    useEffect( ()=>{
-            console.log("useeffect Messaging js")
-            dispatch(getUsers(auth?.data?.responseData?._id))
-          }, [dispatch])
-
+    let configsTokens = useSelector(state => state.configTokenReducer)
     const [selectedChat, setChat] = useState();
+    const dispatch = useDispatch();
+    console.log(configsTokens)
+
+    useEffect( ()=>{
+        console.log("useeffect Messaging js")
+        dispatch(getUsers(auth?.data?.responseData?._id))
+        }, [dispatch])
   
 return (
     <>
