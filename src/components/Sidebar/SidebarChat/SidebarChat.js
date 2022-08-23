@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { getMessagesFromChannel } from '../../../redux/GetMessages/Actions'
 //import { newIncomingMessage } from '../../../redux/NewMessages/Actions'
 import { MessageOutlined } from '@material-ui/icons';
+import { httpManager } from '../../../managers/httpManager.js';
 
 const filterMessages = (userMessages, setShowInfo, userData) => {
     let veamos = userData
@@ -26,8 +27,12 @@ const findUnreadMessages = (newMessages, userData, setNotRead) => {
         return msg.from === userData.phoneNumber
     });
     if(messagesToFilter.length === 0) return;
+
+    var readStatusMessages = messagesToFilter.filter( function(msg) {
+        return msg.isRead === false 
+    })
     // Object.keys(myArray).length
-    const counter = messagesToFilter.length;
+    const counter = readStatusMessages.length;
     console.log(`render unread messages`)
     setNotRead(counter)
 }
@@ -48,6 +53,7 @@ const SidebarChat = (props) => {
     }, [])
 
     const setMessageAndChat = async () => {
+        await httpManager.checkMsgToRead(userData._id)
         setChat(userData);
         dispatch(getMessagesFromChannel(userData._id))
     }
@@ -56,11 +62,11 @@ const SidebarChat = (props) => {
         findUnreadMessages(userMessages, userData, setNotRead)
     }, [userMessages])
 
-    // useEffect(() => {
-    //     //filterMessages(userMessages, setShowInfo, userData)
-    //     filterMessages(newMessages, setShowInfo, userData)
+    useEffect(() => {
+        //filterMessages(userMessages, setShowInfo, userData)
+        filterMessages(newMessages, setShowInfo, userData)
         
-    // }, [newMessages, userData])
+    }, [newMessages, userData])
 
     return (
         <div className = "sidebarChat" onClick = {setMessageAndChat}>
@@ -68,7 +74,7 @@ const SidebarChat = (props) => {
             <div className = "sidebarChat__info">
                 <h2>{userData.name}</h2>
                 <p> { showInfo.lastMessage } </p>
-                <p> <MessageOutlined/> {notRead} </p>
+                {notRead ? <p> <MessageOutlined/> {notRead} </p> : null}
                 
             
             </div>
