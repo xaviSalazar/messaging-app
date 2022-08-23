@@ -112,7 +112,8 @@ const Chat = (props) => {
             to: selectedChat.phoneNumber,
             from: "15550900270",
             addedOn: new Date().getTime(),
-            senderID: 0
+            senderID: 0, 
+            isRead: false
         };
         console.log("verificar ", channelId)
 
