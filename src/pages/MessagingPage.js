@@ -4,10 +4,6 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
 
-
-
-
-
 const MessagingPage = ({socket}) => {
 
     let auth = useSelector(state => state.customerReducer.auth)
@@ -18,7 +14,7 @@ const MessagingPage = ({socket}) => {
     useEffect( ()=>{
         console.log("useeffect Messaging js")
         dispatch(getUsers(auth?.data?.responseData?._id))
-        }, [dispatch])      
+        }, [dispatch, auth])      
   
 return (
     <>

@@ -3,10 +3,10 @@ import Navbar from './pages/Navbar';
 import Settings from './pages/Settings'
 import MessagingPage from './pages/MessagingPage';
 import Login from './components/Authentification/Login'
-import Register from './components/Authentification/Register'
-import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
+// import Register from './components/Authentification/Register'
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import ContactsList from './pages/ContactsList';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Auth from "./Auth"
 import {useSelector} from 'react-redux'
 import {socket} from './managers/socketioManager'
@@ -18,7 +18,7 @@ socket.on("session", ({sessionID, userID}) => {
   socket.auth = { sessionID };
   console.log(`sessionID ${sessionID}, userID ${userID}`)
   //store it in localStorage
-  const appi = setWithExpiry("sessionID", sessionID, 900000);
+  setWithExpiry("sessionID", sessionID, 900000);
   //localStorage.setItem("sessionID", sessionID);
   //save the ID of the user
   socket.userID = userID

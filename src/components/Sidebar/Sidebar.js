@@ -3,10 +3,9 @@ import './Sidebar.css';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Avatar, IconButton } from '@material-ui/core';
+import {  IconButton, Avatar } from '@material-ui/core';
 import { SearchOutlined } from "@material-ui/icons";
 import SidebarChat from './SidebarChat/SidebarChat'
-
 import { useSelector } from "react-redux";
 import { searchOneUser } from '../../redux/GetUsers/UsersAction'
 import { useDispatch } from 'react-redux';
@@ -32,11 +31,7 @@ const Sidebar = (props) => {
     return (
         <div className="sidebar">
             <div className="sidebar__header">
-                <h1> {auth?.data?.responseData?.lastName }</h1>
-                <h1> {auth?.data?.responseData?.firstName} </h1>
-                <h1> {auth?.data?.responseData?.email} </h1>
-                 {/* <Avatar src="https://pbs.twimg.com/profile_images/1020939891457241088/fcbu814K_400x400.jpg">
-                </Avatar> */}
+                <Avatar >{auth?.data?.responseData?.firstName.charAt(0) + auth?.data?.responseData?.lastName.charAt(0)}</Avatar>
                <div className="sidebar__headerRight">
                     <IconButton>
                         <DonutLargeIcon/>
