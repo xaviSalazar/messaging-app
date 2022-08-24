@@ -8,7 +8,7 @@ import { getMessagesFromChannel } from '../../../redux/GetMessages/Actions'
 import { MessageOutlined } from '@material-ui/icons';
 import { httpManager } from '../../../managers/httpManager.js';
 
-const filterMessages = (userMessages, setShowInfo, userData) => {
+const filterMessages = (userMessages, setShowInfo, userData, setArray, array) => {
     let veamos = userData
     var messagesToFilter = userMessages.filter( function(msg) {
         return msg.from === userData.phoneNumber
@@ -18,6 +18,9 @@ const filterMessages = (userMessages, setShowInfo, userData) => {
     console.log(objet.message)
     veamos.lastMessage = objet.message
     const temporaire = {...veamos}
+    const parametros = objet.message
+    setArray([...array, parametros])
+    //console.log(temporaire)
     setShowInfo(temporaire)
     }
 }
@@ -33,7 +36,7 @@ const findUnreadMessages = (newMessages, userData, setNotRead) => {
     })
     // Object.keys(myArray).length
     const counter = readStatusMessages.length;
-    console.log(`render unread messages`)
+    //console.log(`render unread messages`)
     setNotRead(counter)
 }
 
@@ -42,6 +45,7 @@ const SidebarChat = (props) => {
     const dispatch = useDispatch();
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
     const newMessages = useSelector((state) => state.newIncomingMessage)
+    const [array, setArray] = useState([])
     const { userData, setChat} = props;
     const [ showInfo, setShowInfo ] = useState({})
     const [ notRead, setNotRead ] = useState(0)
@@ -53,6 +57,7 @@ const SidebarChat = (props) => {
     }, [])
 
     const setMessageAndChat = async () => {
+        setArray([])
         await httpManager.checkMsgToRead(userData._id)
         setChat(userData);
         dispatch(getMessagesFromChannel(userData._id))
@@ -64,16 +69,16 @@ const SidebarChat = (props) => {
 
     useEffect(() => {
         //filterMessages(userMessages, setShowInfo, userData)
-        filterMessages(newMessages, setShowInfo, userData)
+        filterMessages(newMessages, setShowInfo, userData, setArray, array)
         
-    }, [newMessages, userData])
+    }, [newMessages])
 
     return (
         <div className = "sidebarChat" onClick = {setMessageAndChat}>
             <Avatar />
             <div className = "sidebarChat__info">
                 <h2>{userData.name}</h2>
-                <p> { showInfo.lastMessage } </p>
+                <p> { showInfo.lastMessage } {(array.length === 0) || (array.length === 1) ? null : <><MessageOutlined/> {array.length} </>} </p>
                 {notRead ? <p> <MessageOutlined/> {notRead} </p> : null}
                 
             

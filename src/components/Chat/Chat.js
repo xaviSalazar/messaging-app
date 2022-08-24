@@ -124,16 +124,16 @@ const Chat = (props) => {
         const tokenId = configs.token;
         const numberId = configs.phoneId
 
-        await httpManager.sendMessage({
-            tokenId,
-            numberId,
-            channelId,
-            messages: msgReqData
-        })
+            await httpManager.sendMessage({
+                tokenId,
+                numberId,
+                channelId,
+                messages: msgReqData
+            })
 
-        messages.push(msgReqData);
-        dispatch({ type: "ADD_MESSAGE", payload: msgReqData})
-        SetMessage("");
+            messages.push(msgReqData);
+            dispatch({ type: "ADD_MESSAGE", payload: msgReqData})
+            SetMessage("");
     }
 
     const onMessageTextChanged = (typedText) => {
