@@ -59,8 +59,20 @@ const ContactsList = () => {
                 addedOn: new Date().getTime(),
                 senderID: 0,
                 isRead: false,
-            }
+        }
+        // create data in case to create a channel conversation
+         const channelUsers = [{
+            name: obj.name,
+            phoneNumber: obj.phoneNumber,
+            userId: obj._id            
+        },{
+            name: auth?.data?.responseData?.lastName,
+            phoneNumber: "15550900270",
+            userId: auth?.data?.responseData?._id,
+        }];
+
             await httpManager.sendBusinessMessage({
+                channelUsers,
                 tokenId,
                 numberId,
                 messages: msgReqData
