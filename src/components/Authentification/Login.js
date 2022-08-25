@@ -3,6 +3,7 @@ import './Login.css'
 import { doLoginCustomer } from "../../redux/Authentification/Actions";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom'
 
 const Login = () => {
     
@@ -22,10 +23,10 @@ const Login = () => {
     }
 
     dispatch(doLoginCustomer(data)).then((res) => {
-      console.log(res.payload)
+      //console.log(res.payload)
       if(res.payload.data.success) {
          alert("User log in success")
-         console.log(res.payload.data.responseData.token)
+         //console.log(res.payload.data.responseData.token)
          const token = res.payload.data.responseData.token;
          localStorage.setItem('customerToken', token)
 
@@ -36,19 +37,20 @@ const Login = () => {
 
    };
 
- 
   // JSX code for login form
   const renderForm = (
     <div className="form">
       <form onSubmit={handleSubmit}>
         <div className="input-container">
-          <label>Last name </label>
+          <label>Enter your email:  </label>
           <input type="text" name="uemail" required />
         </div>
         <div className="input-container">
           <label>Password </label>
           <input type="password" name="pass" required />
         </div>
+        <br/>
+        <Link to= "/register" > Crear nueva cuenta </Link>
         <div className="button-container">
           <input type="submit" />
         </div>

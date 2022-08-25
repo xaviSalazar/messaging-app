@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import './Register.css'
-
 import { useDispatch } from 'react-redux';
 import { doRegisterCustomer } from "../../redux/Authentification/Actions";
+
+
+import { useNavigate } from 'react-router-dom'
+
 
 
 const Register =  () => {
@@ -12,7 +15,8 @@ const Register =  () => {
     // React States
   const [errorMessages, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  let navigate = useNavigate();
+ 
   const handleSubmit = (event) => {
     //Prevent page reload
     event.preventDefault();
@@ -27,10 +31,13 @@ const Register =  () => {
     }
 
     dispatch(doRegisterCustomer(data)).then((res) => {
+      console.log(res.payload)
       if(res.payload.data.success) {
-         alert("User created succesfully")
+         alert(res.payload.data.message)
+         navigate('/login');
+
       } else {
-        alert("Not created") 
+        alert(res.payload.data.message) 
       }
     })
 

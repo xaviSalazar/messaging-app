@@ -9,10 +9,7 @@ export const doRegisterCustomer = (data) => async(dispatch) => {
 
         dispatch( {type: CUSTOMER_REGISTER, payload: customerData})
 
-        // return {
-        //     type: CUSTOMER_REGISTER,
-        //     payload: customerData
-        // }
+        return {type: CUSTOMER_REGISTER,payload: customerData}
 
     } catch(error) {
         return error.response.data

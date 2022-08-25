@@ -7,14 +7,9 @@ import React, {useEffect} from 'react'
 
 const Auth = ({authRoute, redirectTo, children}) => {
 
-    
     let auth = useSelector(state => state.customerReducer.auth);
     const dispatch = useDispatch();
     let navigate = useNavigate();
-
-    console.log(auth)
-
-
 
 useEffect(() => {
     console.log("here")
@@ -27,7 +22,7 @@ useEffect(() => {
            }
             
        } else {
-        console.log(`inside false`)
+        console.log(`inside false (it is authenticated)`)
          if(!authRoute) {
             navigate(redirectTo)
          }
@@ -36,7 +31,6 @@ useEffect(() => {
     });
 
 }, [dispatch, auth?.data?.success])
-
 
 return children;
 }
