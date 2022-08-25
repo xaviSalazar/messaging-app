@@ -4,10 +4,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import {  IconButton } from '@material-ui/core';
 import { Button } from "@material-ui/core";
 import {doSaveTokens} from "../redux/ConfigToken/Actions"
-            
 
 const Settings = () => {
-
     const [phoneNumber, setPhoneNumber] = useState('')
     const [token, setToken] = useState('')
     const [phoneId, setPhoneId] = useState('')

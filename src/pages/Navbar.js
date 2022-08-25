@@ -36,17 +36,15 @@ const Navbar = () => {
   };
 
 let auth = useSelector(state => state.customerReducer.auth)
-    //const [loggedIn, setLoggeIn] = useState(false)
-
-
+   
     const location = useLocation();
     return (
         <>
             <nav className="navbar">
                     <ul>
-                        <li><Link className={location.pathname === "/" ? "active": null} to= {auth?.data?.success?"/":"/login"} ><ChatOutlined/> </Link></li>
-                        <li><Link className={location.pathname === "/settings" ? "active": null} to={auth?.data?.success?"/settings":"/login"} ><SettingsOutlined/> </Link></li>
-                        <li><Link className={location.pathname === "/contacts" ? "active": null} to={auth?.data?.success?"/contacts":"/login"} ><PersonOutlineOutlined/> </Link></li>
+                        <li><Link className={location.pathname === "/dashboard" ? "active": null} to= "/dashboard" ><ChatOutlined/> </Link></li>
+                        <li><Link className={location.pathname === "/settings" ? "active": null} to= "/settings" ><SettingsOutlined/> </Link></li>
+                        <li><Link className={location.pathname === "/contacts" ? "active": null} to= "/contacts" ><PersonOutlineOutlined/> </Link></li>
                         <li>{auth?.data?.success?<> <Button 
                                                         onClick={handleClick}>
                                                         Account 

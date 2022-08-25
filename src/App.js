@@ -3,7 +3,7 @@ import Navbar from './pages/Navbar';
 import Settings from './pages/Settings'
 import MessagingPage from './pages/MessagingPage';
 import Login from './components/Authentification/Login'
-// import Register from './components/Authentification/Register'
+import Register from './components/Authentification/Register'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import ContactsList from './pages/ContactsList';
 import { useEffect } from 'react';
@@ -40,7 +40,6 @@ function App() {
         socket.auth = { sessionID }
         socket.connect()
     } else {
-        console.log('when not session id')
         const tokens = localStorage.getItem("whatsapp_app")
         console.log(tokens)
         if(tokens) {
@@ -65,10 +64,12 @@ function App() {
     <div className="app_body"> 
     <Navbar/>
       <Routes>
-        <Route path="/"element = {<Auth redirectTo="/login"> {auth?.data?.success?<MessagingPage socket ={ socket }/>:null} </Auth>} />
-        <Route path="/login"element = {<Auth redirectTo="/"><Login/></Auth>} />
-        <Route path='/settings' element = {<Auth redirectTo="/login"><Settings /></Auth>} />
-        <Route path='/contacts' element = {<Auth redirectTo="/login"><ContactsList/></Auth>} />
+        <Route path = "/" element = {<Auth authRoute = {true} redirectTo="/login"><div>Home</div></Auth>} />
+        <Route path = "/login" element = {<Auth redirectTo="/"><Login/></Auth>} />
+        <Route path = "/dashboard"element = {<Auth authRoute = {true} redirectTo="/login"> {auth?.data?.success?<MessagingPage socket ={ socket }/>:<Login/>} </Auth>} />
+        <Route path = '/settings' element = {<Auth authRoute = {true} redirectTo="/login"> {auth?.data?.success?<Settings />:<Login/>}</Auth>} />
+        <Route path = '/contacts' element = {<Auth authRoute = {true} redirectTo="/login"> {auth?.data?.success?<ContactsList/>:<Login/>}</Auth>} />
+        <Route path = "/register" element = {<Auth redirectTo="/"> <Register/> </Auth>} />
       </Routes>
       </div>
       </div>
