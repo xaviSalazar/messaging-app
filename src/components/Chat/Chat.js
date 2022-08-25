@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useReducer } from 'react';
+import React, {useEffect, useState, useReducer, useRef } from 'react';
 import { Avatar, IconButton } from '@material-ui/core';
 import './Chat.css';
 import { AttachFile, MoreVert, SearchOutlined, InsertEmoticon } from '@material-ui/icons';
@@ -37,8 +37,12 @@ const Chat = (props) => {
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
     const [message, SetMessage] = useState("");
-
+    const messagesEndRef = useRef(null)
     const [messagesList, dispatch] = useReducer(reducer, []);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+      }
    
     console.log("rendering chat component")
     useEffect(() => {
@@ -46,6 +50,10 @@ const Chat = (props) => {
         // load initial data 
         if(!testeo) dispatch({type: "LOAD_MESSAGES", payload: userMessages})
     }, [userMessages])
+
+    useEffect(() => {
+        scrollToBottom()
+      }, [messagesList]);
     
     useEffect(() => {
         console.log('useEFFECT chat js');
@@ -179,6 +187,7 @@ const Chat = (props) => {
                         <Messagebox key = {index} userDataMessage = {userDataMessage}/>
                     ))   
                 }
+                <div ref={messagesEndRef} />
     
             </div>
             <div className='chat__footer'>
