@@ -19,13 +19,14 @@ const ContactsList = () => {
     const [openForm, setOpenForm] = useState(false)
     // track checked items
     const [checked, setChecked] = useState([]);
+    const contactsList  = useSelector((state) => state.getUsers);
 
     // Add/Remove checked item from list
     const handleCheck = (event) => {
         var updatedList = [...checked];
         if (event.target.checked) {
         updatedList = [...checked, event.target.value];
-        console.log(updatedList)
+        
         } else {
         updatedList.splice(checked.indexOf(event.target.value), 1);
         }
@@ -38,27 +39,31 @@ const ContactsList = () => {
             dispatch(getUsers(auth?.data?.responseData?._id))
           }, [dispatch])
 
-    const contactsList  = useSelector((state) => state.getUsers);
+    const sendArrayMessage = async (item) => {
 
-    const SendMessage = async () => {
-
-        let phone = checked.pop()
-        console.log(phone);
-
-        if(typeof phone === 'undefined') return;
-
-        const msgReqData ={
-            name: "DefaultUser",
-            mensaje: "prueba",
-            to: phone,
+        const obj = JSON.parse(item)
+    
+        const msgReqData = { 
+            name: obj.name,
             from: "15550900270",
+            to: obj.phoneNumber,
+            message: "bussiness_initiated_message",
             addedOn: new Date().getTime(),
-            senderID: 0
-        };
-
-        await httpManager.sendBusinessMessage({
-                    messages: msgReqData
-                })
+            senderID: 0,
+            isRead: false,
+        }
+        console.log(msgReqData)
+    }
+   
+    const SendMessage = async () => {
+        // treat the whole array with data
+        checked.forEach(sendArrayMessage)
+        // let phone = checked.pop()
+        // console.log(phone);
+        // if(typeof phone === 'undefined') return;
+        // await httpManager.sendBusinessMessage({
+        //             messages: msgReqData
+        //         })
     }
 
     return (
@@ -115,7 +120,7 @@ const ContactsList = () => {
                                 {
                                     contactsList.map(contact => (
                                         <tr key={contact._id}>
-                                            <td><input value={contact.phoneNumber} type="checkbox" onChange={handleCheck} /></td>
+                                            <td><input value={[`{"_id":"${contact._id}", "name": "${contact.name}", "phoneNumber":"${contact.phoneNumber}"}`]} type="checkbox" onChange={handleCheck} /></td>
                                             <Contacts contact={contact}/>
                                         </tr>
                                     ))
