@@ -39,31 +39,37 @@ const ContactsList = () => {
             dispatch(getUsers(auth?.data?.responseData?._id))
           }, [dispatch])
 
-    const sendArrayMessage = async (item) => {
-
-        const obj = JSON.parse(item)
-    
-        const msgReqData = { 
-            name: obj.name,
-            from: "15550900270",
-            to: obj.phoneNumber,
-            message: "bussiness_initiated_message",
-            addedOn: new Date().getTime(),
-            senderID: 0,
-            isRead: false,
-        }
-        console.log(msgReqData)
-    }
+   
    
     const SendMessage = async () => {
+          // retrieve tokens 
+        const saved = localStorage.getItem("whatsapp_app");
+        if(!saved){ alert('insertar tokens primero'); return}
+        const configs = JSON.parse(saved);
+        const tokenId = configs.token;
+        const numberId = configs.phoneId
         // treat the whole array with data
-        checked.forEach(sendArrayMessage)
-        // let phone = checked.pop()
-        // console.log(phone);
-        // if(typeof phone === 'undefined') return;
-        // await httpManager.sendBusinessMessage({
-        //             messages: msgReqData
-        //         })
+        const sendArrayMessage = async (item) => {
+            const obj = JSON.parse(item)
+            const msgReqData = { 
+                name: obj.name,
+                from: "15550900270",
+                to: obj.phoneNumber,
+                message: "bussiness_initiated_message",
+                addedOn: new Date().getTime(),
+                senderID: 0,
+                isRead: false,
+            }
+            // await httpManager.sendMessage({
+            //     tokenId,
+            //     numberId,
+            //     messages: msgReqData
+            // })
+            console.log(msgReqData)
+        }
+
+          checked.forEach(sendArrayMessage)
+    
     }
 
     return (
