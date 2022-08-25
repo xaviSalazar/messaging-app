@@ -60,11 +60,11 @@ const ContactsList = () => {
                 senderID: 0,
                 isRead: false,
             }
-            // await httpManager.sendMessage({
-            //     tokenId,
-            //     numberId,
-            //     messages: msgReqData
-            // })
+            await httpManager.sendBusinessMessage({
+                tokenId,
+                numberId,
+                messages: msgReqData
+            })
             console.log(msgReqData)
         }
 
