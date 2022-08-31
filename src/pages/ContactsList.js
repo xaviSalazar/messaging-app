@@ -55,6 +55,7 @@ const ContactsList = () => {
                 name: obj.name,
                 from: "15550900270",
                 to: obj.phoneNumber,
+                type: "text",
                 message: "bussiness_initiated_message",
                 addedOn: new Date().getTime(),
                 senderID: 0,
