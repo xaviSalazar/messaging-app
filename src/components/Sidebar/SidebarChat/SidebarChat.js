@@ -16,7 +16,9 @@ const filterMessages = (userMessages, setShowInfo, userData, setArray, array) =>
     var objet = messagesToFilter.pop();
     if(objet) {
     console.log(objet.message)
-    veamos.lastMessage = objet.message
+    // veamos.lastMessage = objet.message
+    console.log(objet)
+    {objet.type === "text" ? veamos.lastMessage = objet.message : veamos.lastMessage = objet.type}
     const temporaire = {...veamos}
     const parametros = objet.message
     setArray([...array, parametros])
