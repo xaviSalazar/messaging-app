@@ -13,3 +13,4 @@ export const createChannel = (requestData) => axios.post(`${API_BASE_URL}/channe
 export const getChannelList = (userId) => axios.get(`${API_BASE_URL}/channel-list?userId=${userId}`)
 export const sendMessage = (requestData) => axios.post(`${API_BASE_URL}/message`, requestData)
 export const getAllUsers = (client) => axios.get(`${API_BASE_URL}/get-users?owner=${client}`)
+export const sendCredentials = (requestData) => axios.post(`${API_BASE_URL}/save-user-data`, requestData)

@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
 import {  IconButton } from '@material-ui/core';
 import { Button } from "@material-ui/core";
 import {doSaveTokens} from "../redux/ConfigToken/Actions"
+import * as crypto from 'crypto-js';
+import {sendCredentials} from '../api/index'
+
+
 
 const Settings = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [token, setToken] = useState('')
     const [phoneId, setPhoneId] = useState('')
     const dispatch = useDispatch()
+    let auth = useSelector(state => state.customerReducer.auth)
+    
     // local state to input
     const [isDisabled, setIsDisabled] = useState({ phone_num: true, what_token: true, phone_id: true});
 
@@ -66,6 +72,7 @@ const Settings = () => {
 
 
     const setConfigurations = () => {
+
         if( phoneNumber && token && phoneId)
         {
             console.log('clicked')
@@ -76,6 +83,19 @@ const Settings = () => {
                 phoneId : phoneId
             }
 
+            //let phoneEncrypt = crypto.AES.encrypt(phoneNumber, 'anykeyhere').toString();
+            let tokenEncrypt = crypto.AES.encrypt(token, 'anykeyhere').toString();
+            let phoneIdEncrypt = crypto.AES.encrypt(phoneId,'anykeyhere').toString();
+
+            const configEncrypt = {
+                phoneNumber: phoneNumber,
+                secretToken: tokenEncrypt,
+                phoneNumberId: phoneIdEncrypt,
+                userId: auth?.data?.responseData?._id
+            }
+
+            //console.log(`phone ${phoneEncrypt}, token ${tokenEncrypt}, phoneId ${phoneIdEncrypt}`)
+            sendCredentials(configEncrypt)
             dispatch(doSaveTokens(config))
         }
     }
