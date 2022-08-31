@@ -118,6 +118,7 @@ const Chat = (props) => {
             name: auth?.data?.responseData?.lastName,
             message,
             to: selectedChat.phoneNumber,
+            type: "text",
             from: "15550900270",
             addedOn: new Date().getTime(),
             senderID: 0, 
