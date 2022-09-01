@@ -50,7 +50,7 @@ const SidebarChat = (props) => {
     const [ showInfo, setShowInfo ] = useState({})
     const [ notRead, setNotRead ] = useState(0)
 
-    console.log(`rendering SidebarChat ${userData.name}`)
+    //console.log(`rendering SidebarChat ${userData.name}`)
 
     useEffect( () => {
         dispatch(getMessagesFromChannel(userData._id))

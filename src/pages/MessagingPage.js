@@ -12,7 +12,7 @@ const MessagingPage = ({socket}) => {
     const dispatch = useDispatch();   
 
     useEffect( ()=>{
-        console.log("useeffect Messaging js")
+        //console.log("useeffect Messaging js")
         dispatch(getUsers(auth?.data?.responseData?._id))
         }, [dispatch, auth])      
   

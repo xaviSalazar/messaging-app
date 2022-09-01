@@ -15,7 +15,7 @@ const reducer = (state, action) => {
 
     if(action.type === "ADD_MESSAGE") {
         const new_message = action.payload;
-        console.log(new_message)
+        //console.log(new_message)
         state.push(new_message)
         return [...state]        
     }
@@ -27,12 +27,17 @@ const reducer = (state, action) => {
 
 }
 
+const saved = localStorage.getItem("whatsapp_app");
+const configs = JSON.parse(saved);
+const tokenId = configs.token;
+const numberId = configs.phoneId
+
 const Chat = (props) => {
 
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
     let auth = useSelector(state => state.customerReducer.auth);
     let configsTokens = useSelector(state => state.configTokenReducer)
-    console.log(configsTokens)
+    //console.log(configsTokens)
     const disparar = useDispatch();
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
@@ -44,7 +49,7 @@ const Chat = (props) => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
       }
    
-    console.log("rendering chat component")
+    //console.log("rendering chat component")
     useEffect(() => {
         // if(!testeo)setMessageList(userMessages);
         // load initial data 
@@ -57,19 +62,19 @@ const Chat = (props) => {
     
     useEffect(() => {
 
-        console.log('useEFFECT chat js');
+        //console.log('useEFFECT chat js');
         //setMessageList(userMessages);
         if(selectedChat) testeo=false;
 
         const eventListener = ({ messages }) => {
             //console.log(`${trigger}, ${from}, ${msg}`)
-            console.log("dentro de listener cote chat"); 
+            //console.log("dentro de listener cote chat"); 
             disparar(newIncomingMessage(messages))
             if(selectedChat)
             {
                 if(selectedChat.phoneNumber === messages.from) {
                     dispatch({ type: "ADD_MESSAGE", payload: messages})
-                    console.log('entro en true')
+                    //console.log('entro en true')
                     testeo = true;
                 }         
             }     
@@ -83,33 +88,27 @@ const Chat = (props) => {
     }, [socket, selectedChat, disparar])
 
     const handleSubmit = async (e) => {
+
         e.preventDefault(); 
         if (message === '') return;
-        let channelId = "";
         // creates new conversation channel between two persons
-        if(!messageList || !messageList.length) {
-            
+        // if(!messageList || !messageList.length) {
             const channelUsers = [{
                 name: selectedChat.name,
                 phoneNumber: selectedChat.phoneNumber,
                 userId: selectedChat._id            
             },{
                 name: auth?.data?.responseData?.lastName,
-                phoneNumber: "15550900270",
+                phoneNumber: auth?.data?.responseData?.phoneNumber,
                 userId: auth?.data?.responseData?._id,
             }];
-            console.log("=====", channelUsers)
-            const channelResponse = await httpManager.createChannel({channelUsers});
-            console.log("=====", channelResponse)
-            channelId = channelResponse.data.responseData._id;
-            console.log("=====", channelId);         
-        } else {
-            console.log(selectedChat._id)
-            const receiveId = await httpManager.getChannelList(selectedChat._id);
-            console.log(receiveId);
-            channelId = receiveId.data.responseData[0]._id;
-        }
-    
+            
+        //     const channelResponse = await httpManager.createChannel({channelUsers});
+        //     channelId = channelResponse.data.responseData._id;           
+        // } else {
+        //     const receiveId = await httpManager.getChannelList(selectedChat._id);
+        //     channelId = receiveId.data.responseData[0]._id;
+        // }
         const messages = [...messageList];
         // message I want to send to 
         const msgReqData ={
@@ -117,28 +116,20 @@ const Chat = (props) => {
             message,
             to: selectedChat.phoneNumber,
             type: "text",
-            from: "15550900270",
+            from: auth?.data?.responseData?.phoneNumber,
             addedOn: new Date().getTime(),
             senderID: 0, 
             isRead: false
-        };
-        console.log("verificar ", channelId)
-
-        
-        const saved = localStorage.getItem("whatsapp_app");
+        };  
         if(!saved){ alert('insertar tokens primero'); return}
-        const configs = JSON.parse(saved);
-        const tokenId = configs.token;
-        const numberId = configs.phoneId
-
             await httpManager.sendMessage({
+                channelUsers,
                 tokenId,
                 numberId,
-                channelId,
                 messages: msgReqData
             })
-
             messages.push(msgReqData);
+            // internal use for message list 
             dispatch({ type: "ADD_MESSAGE", payload: msgReqData})
             SetMessage("");
     }
@@ -151,7 +142,6 @@ const Chat = (props) => {
             setMessageList([]);
             let channelId;
             const receiveId = await httpManager.getChannelList(selectedChat._id);
-            console.log(receiveId);
             channelId = receiveId.data.responseData[0]._id;
             await httpManager.deleteALlMsg(channelId);
     }

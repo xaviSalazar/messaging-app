@@ -20,12 +20,12 @@ const Sidebar = (props) => {
     // use selectors
     const contactList  = useSelector((state) => state.getUsers);
     let auth = useSelector(state => state.customerReducer.auth)
-    console.log("rendering")
+    //console.log("rendering")
 
     useEffect(() => {
 
         const eventListener2 = ({ messages }) => {
-            console.log("new user contact");  
+            //console.log("new user contact");  
             dispatch(getUsers(auth?.data?.responseData?._id))
         };
         socket.on('new_user_contact', eventListener2);

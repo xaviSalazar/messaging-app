@@ -30,23 +30,23 @@ function App() {
  
   let auth = useSelector(state => state.customerReducer.auth)
   let configsTokens = useSelector(state => state.configTokenReducer)
-  console.log('rendering app')
+  //console.log('rendering app')
 
 
   useEffect( () => {
     const sessionID = getWithExpiry("sessionID")
     if(sessionID)  {
         console.log(`inside sessionID: ${sessionID}`)
-        console.log(sessionID)
+        //console.log(sessionID)
         socket.auth = { sessionID }
         socket.connect()
     } else {
         const tokens = localStorage.getItem("whatsapp_app")
-        console.log(tokens)
+        //console.log(tokens)
         if(tokens) {
             const item = JSON.parse(tokens);
             const username = item.phoneNumber
-            console.log(username)
+            //console.log(username)
             socket.auth = { username }
             socket.connect()
         }

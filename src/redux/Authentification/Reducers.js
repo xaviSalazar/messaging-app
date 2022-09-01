@@ -31,7 +31,7 @@ const customerReducer = (state = initialState, action) => {
             
             const isAuth = action.payload.data.success
 
-            console.log(isAuth)
+            //console.log(isAuth)
             return {
                  auth: !isAuth
             };
