@@ -12,6 +12,7 @@ import {useSelector} from 'react-redux'
 import {socket} from './managers/socketioManager'
 import {setWithExpiry} from'./managers/socketioManager'
 import  {getWithExpiry} from'./managers/socketioManager'
+import { HashRouter } from 'react-router-dom'
 
 socket.on("session", ({sessionID, userID}) => {
   // attach the session ID to the next reconnection attemps
@@ -59,7 +60,7 @@ function App() {
   // set variables to use within whatsapp
   return (
     <>
-    <Router basename={process.env.PUBLIC_URL}> 
+    <HashRouter> 
     <div className="app">
     <div className="app_body"> 
     <Navbar/>
@@ -73,7 +74,7 @@ function App() {
       </Routes>
       </div>
       </div>
-    </Router>
+    </HashRouter>
     </>
   );
   
