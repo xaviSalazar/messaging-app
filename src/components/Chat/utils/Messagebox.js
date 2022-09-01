@@ -1,5 +1,20 @@
 import React from 'react'
 import './Messagebox.css'
+import ReactAudioPlayer from 'react-audio-player'
+
+const renderType = (userDataMessage) => {
+
+    switch(userDataMessage.type) {
+        case 'text':
+          return <span className= 'chat__paragraph'>{userDataMessage.message}</span>;
+        case 'image':
+          return <img src={userDataMessage.message} width="200" height="200" /> ;
+        case 'audio':
+          return <ReactAudioPlayer src={userDataMessage.message} controls/>
+        default:
+            return null;
+    }
+}
 
 const Messagebox = (props) => {
 
@@ -10,11 +25,7 @@ const Messagebox = (props) => {
                     <span className = 'chat__name' >
                         {userDataMessage.name}
                     </span>
-                    
-                    {userDataMessage.type === "text" ? (
-                    <span className= 'chat__paragraph'>
-                        {userDataMessage.message}
-                    </span>) : <img src={userDataMessage.message} width="200" height="200" /> }
+                    {renderType(userDataMessage)}
                     <br></br>
                     <span className='chat__timestamp'>
                         {new Date(userDataMessage.addedOn).toUTCString()}
