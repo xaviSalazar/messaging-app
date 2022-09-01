@@ -35,7 +35,7 @@ const ContactsList = () => {
 
     const dispatch = useDispatch();
     useEffect( ()=>{
-            console.log("useeffect CONTACTS LIS js")
+            //console.log("useeffect CONTACTS LIS js")
             dispatch(getUsers(auth?.data?.responseData?._id))
           }, [dispatch])
 
@@ -53,7 +53,7 @@ const ContactsList = () => {
             const obj = JSON.parse(item)
             const msgReqData = { 
                 name: obj.name,
-                from: "15550900270",
+                from: auth?.data?.responseData?.phoneNumber,
                 to: obj.phoneNumber,
                 type: "text",
                 message: "bussiness_initiated_message",
@@ -68,7 +68,7 @@ const ContactsList = () => {
             userId: obj._id            
         },{
             name: auth?.data?.responseData?.lastName,
-            phoneNumber: "15550900270",
+            phoneNumber: auth?.data?.responseData?.phoneNumber,
             userId: auth?.data?.responseData?._id,
         }];
 
@@ -78,7 +78,7 @@ const ContactsList = () => {
                 numberId,
                 messages: msgReqData
             })
-            console.log(msgReqData)
+            //console.log(msgReqData)
         }
 
           checked.forEach(sendArrayMessage)

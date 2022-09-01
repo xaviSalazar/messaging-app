@@ -8,8 +8,8 @@ export default (users_list = initialState, action) => {
         case 'GET-ALL-USERS':
             return action.payload;
         case 'SEARCH-USER':
-           console.log("inside search")
-           console.log(action.payload)
+           //console.log("inside search")
+           //console.log(action.payload)
            return [action.payload];
         case 'NEW-MESSAGE':
             const index = users_list.findIndex(object => {

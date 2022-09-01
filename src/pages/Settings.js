@@ -28,7 +28,7 @@ const Settings = () => {
             return;
         }
       
-        console.log('renderiza useEFFECT')
+        //console.log('renderiza useEFFECT')
         const item = JSON.parse(itemStr);
         setPhoneNumber(item.phoneNumber);
         setToken(item.token);
@@ -51,7 +51,7 @@ const Settings = () => {
             let lock = !isDisabled.phone_id
             setIsDisabled({...isDisabled, phone_id: lock})
         }
-        console.log(value)
+        //console.log(value)
        
     }
 
@@ -75,7 +75,7 @@ const Settings = () => {
 
         if( phoneNumber && token && phoneId)
         {
-            console.log('clicked')
+            //console.log('clicked')
 
             const config = {
                 phoneNumber : phoneNumber,

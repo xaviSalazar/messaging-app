@@ -24,7 +24,7 @@ const Navbar = () => {
   const handleLogout = () => {
     setAnchorEl(null);
     dispatch(doCustomerLogout()).then(res => {
-      console.log(res.payload.data.success)
+      //console.log(res.payload.data.success)
       if(res.payload.data.success) {
         localStorage.removeItem("customerToken");
         alert("logout success")

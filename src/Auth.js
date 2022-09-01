@@ -12,17 +12,17 @@ const Auth = ({authRoute, redirectTo, children}) => {
     let navigate = useNavigate();
 
 useEffect(() => {
-    console.log("here")
+    //console.log("here")
     dispatch(doCustomerAuth()).then( async (response) => {
         
        if(! response.payload.data.success) {
-        console.log(`inside false de success`)
+        //console.log(`inside false de success`)
            if(authRoute) {
                 navigate(redirectTo);
            }
             
        } else {
-        console.log(`inside false (it is authenticated)`)
+        //console.log(`inside false (it is authenticated)`)
          if(!authRoute) {
             navigate(redirectTo)
          }
