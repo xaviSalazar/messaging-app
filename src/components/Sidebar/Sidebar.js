@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import './Sidebar.css';
 import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -9,17 +9,31 @@ import SidebarChat from './SidebarChat/SidebarChat'
 import { useSelector } from "react-redux";
 import { searchOneUser } from '../../redux/GetUsers/UsersAction'
 import { useDispatch } from 'react-redux';
-
+import { getUsers } from '../../redux/GetUsers/UsersAction';
 
 const Sidebar = (props) => {
   
     // 
     const dispatch = useDispatch();
     const [searchString, setSearchString] = useState("");
+    const [socket, setSocket] = useState(props.socket)
     // use selectors
     const contactList  = useSelector((state) => state.getUsers);
     let auth = useSelector(state => state.customerReducer.auth)
     console.log("rendering")
+
+    useEffect(() => {
+
+        const eventListener2 = ({ messages }) => {
+            console.log("new user contact");  
+            dispatch(getUsers(auth?.data?.responseData?._id))
+        };
+        socket.on('new_user_contact', eventListener2);
+        return () => {
+            socket.off('new_user_contact') 
+        }
+
+    }, [socket])
 
     const onSearchTextChanged = async (searchText) => {
         setSearchString(searchText);
@@ -27,6 +41,8 @@ const Sidebar = (props) => {
         // to do: implement phone validation
         dispatch(searchOneUser(searchText))
     }
+
+  
 
     return (
         <div className="sidebar">

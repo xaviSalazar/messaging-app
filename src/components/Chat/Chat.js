@@ -56,14 +56,14 @@ const Chat = (props) => {
       }, [messagesList]);
     
     useEffect(() => {
+
         console.log('useEFFECT chat js');
         //setMessageList(userMessages);
         if(selectedChat) testeo=false;
 
         const eventListener = ({ messages }) => {
             //console.log(`${trigger}, ${from}, ${msg}`)
-            console.log("dentro de listener cote chat");
-            //dispatch(getMessagesFromChannel(from))   
+            console.log("dentro de listener cote chat"); 
             disparar(newIncomingMessage(messages))
             if(selectedChat)
             {
@@ -71,17 +71,15 @@ const Chat = (props) => {
                     dispatch({ type: "ADD_MESSAGE", payload: messages})
                     console.log('entro en true')
                     testeo = true;
-                } 
-                
-            }
-            // console.log(userMessages)       
+                }         
+            }     
         };
+
 
         socket.on('user_answered', eventListener);
         return () => {
-            socket.off('user_answered')
-            console.log('desabonnement')  
-    }
+            socket.off('user_answered') 
+         }
     }, [socket, selectedChat, disparar])
 
     const handleSubmit = async (e) => {
