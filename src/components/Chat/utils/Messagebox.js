@@ -10,7 +10,12 @@ const renderType = (userDataMessage) => {
         case 'image':
           return <img src={userDataMessage.message} width="200" height="200" /> ;
         case 'audio':
-          return <ReactAudioPlayer src={userDataMessage.message} controls/>
+          return <ReactAudioPlayer src={userDataMessage.message} controls/>;
+        case 'document':
+          return  <a href={userDataMessage.message} target="_blank">
+                  <img alt="Qries" src="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg"
+                  width="200" height="200"/>
+                  </a>
         default:
             return null;
     }
