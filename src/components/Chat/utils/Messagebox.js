@@ -1,14 +1,17 @@
 import React from 'react'
 import './Messagebox.css'
 import ReactAudioPlayer from 'react-audio-player'
+import { Button } from '@material-ui/core';
 
 const renderType = (userDataMessage) => {
-
     switch(userDataMessage.type) {
         case 'text':
           return <span className= 'chat__paragraph'>{userDataMessage.message}</span>;
         case 'image':
-          return <img src={userDataMessage.message} width="200" height="200" /> ;
+          return <a href={userDataMessage.message} target="_blank">
+                 <img src={userDataMessage.message} width="200" height="200" 
+                   /> 
+                 </a>;
         case 'audio':
           return <ReactAudioPlayer src={userDataMessage.message} controls/>;
         case 'document':
