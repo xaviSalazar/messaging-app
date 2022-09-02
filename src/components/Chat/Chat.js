@@ -27,10 +27,17 @@ const reducer = (state, action) => {
 
 }
 
+let tokenId;
+let numberId;
+
 const saved = localStorage.getItem("whatsapp_app");
+if (saved) {
 const configs = JSON.parse(saved);
-const tokenId = configs.token;
-const numberId = configs.phoneId
+tokenId = configs.token;
+numberId = configs.phoneId
+} else {
+    alert('ingrese los tokens de config')
+}
 
 const Chat = (props) => {
 
