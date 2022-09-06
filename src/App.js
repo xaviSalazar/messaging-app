@@ -45,7 +45,7 @@ function App() {
         //console.log(tokens)
         if(tokens) {
             const item = JSON.parse(tokens);
-            const username = item.phoneNumber
+            const username = item.phoneNumberId
             //console.log(username)
             socket.auth = { username }
             socket.connect()

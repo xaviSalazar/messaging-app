@@ -31,7 +31,7 @@ const saved = localStorage.getItem("whatsapp_app");
 if (saved) {
 const configs = JSON.parse(saved);
 tokenId = configs.token;
-numberId = configs.phoneId
+numberId = configs.phoneNumberId
 } else {
     alert('ingrese los tokens de config')
 }
@@ -41,7 +41,6 @@ const Chat = (props) => {
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
     let auth = useSelector(state => state.customerReducer.auth);
     let configsTokens = useSelector(state => state.configTokenReducer)
-    //console.log(configsTokens)
     const disparar = useDispatch();
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
@@ -103,7 +102,7 @@ const Chat = (props) => {
                 userId: selectedChat._id            
             },{
                 name: auth?.data?.responseData?.lastName,
-                phoneNumber: auth?.data?.responseData?.phoneNumber,
+                phoneNumber: auth?.data?.responseData?.phoneNumberId,
                 userId: auth?.data?.responseData?._id,
             }];
             
@@ -120,7 +119,7 @@ const Chat = (props) => {
             message,
             to: selectedChat.phoneNumber,
             type: "text",
-            from: auth?.data?.responseData?.phoneNumber,
+            from: numberId,
             addedOn: new Date().getTime(),
             senderID: 0, 
             isRead: false

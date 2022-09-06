@@ -159,13 +159,13 @@ const ContactsList = () => {
         if (!saved) { alert('insertar tokens primero'); return }
         const configs = JSON.parse(saved);
         const tokenId = configs.token;
-        const numberId = configs.phoneId
+        const numberId = configs.phoneNumberId
         // treat the whole array with data
         const sendArrayMessage = async (item) => {
             const obj = JSON.parse(item)
             const msgReqData = {
                 name: obj.name,
-                from: auth?.data?.responseData?.phoneNumber,
+                from: numberId,
                 to: obj.phoneNumber,
                 type: "text",
                 message: "bussiness_initiated_message",
@@ -180,7 +180,7 @@ const ContactsList = () => {
                 userId: obj._id
             }, {
                 name: auth?.data?.responseData?.lastName,
-                phoneNumber: auth?.data?.responseData?.phoneNumber,
+                phoneNumber: numberId,
                 userId: auth?.data?.responseData?._id,
             }];
             await httpManager.sendBusinessMessage({
@@ -203,7 +203,7 @@ const ContactsList = () => {
                 <div className="table-responsive">
                     {/* small section to draw example message: Do it to generate automatique component */}
                     <div className="external">
-                        <div className='chat__body'>
+                        <div className='chat__preview'>
                             <div className="_6xe3">
                                 <div className="_70ru">
                                     <RenderHeader />

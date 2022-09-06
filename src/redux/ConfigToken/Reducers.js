@@ -3,7 +3,7 @@ import {SAVE_CONFIG_TOKENS} from './types'
 const initialState = {
     phoneNumber : "",
     token : "",
-    phoneId : ""
+    phoneNumberId : ""
 }
 
 const configTokenReducer = (config = initialState, action) => {

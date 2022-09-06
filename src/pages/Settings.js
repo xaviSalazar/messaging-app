@@ -12,7 +12,7 @@ import {sendCredentials} from '../api/index'
 const Settings = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [token, setToken] = useState('')
-    const [phoneId, setPhoneId] = useState('')
+    const [phoneNumberId, setPhoneNumberId] = useState('')
     const [businessId, setBusinessId] = useState('')
     const dispatch = useDispatch()
     let auth = useSelector(state => state.customerReducer.auth)
@@ -33,7 +33,7 @@ const Settings = () => {
         const item = JSON.parse(itemStr);
         setPhoneNumber(item.phoneNumber);
         setToken(item.token);
-        setPhoneId(item.phoneId);
+        setPhoneNumberId(item.phoneNumberId);
         setBusinessId(item.businessId)
         //setInputValues(item)
     }, [])
@@ -73,7 +73,7 @@ const Settings = () => {
     };
 
     const handleChangeId = event => {
-        setPhoneId(event.target.value);
+        setPhoneNumberId(event.target.value);
         //console.log('PHONEID value is:', phoneId);
     };
 
@@ -84,26 +84,26 @@ const Settings = () => {
 
     const setConfigurations = () => {
 
-        if( phoneNumber && token && phoneId && businessId)
+        if( phoneNumber && token && phoneNumberId && businessId)
         {
             //console.log('clicked')
 
             const config = {
                 phoneNumber : phoneNumber,
                 token : token,
-                phoneId : phoneId,
+                phoneNumberId : phoneNumberId,
                 businessId: businessId
             }
 
             //let phoneEncrypt = crypto.AES.encrypt(phoneNumber, 'anykeyhere').toString();
             let tokenEncrypt = crypto.AES.encrypt(token, 'anykeyhere').toString();
-            let phoneIdEncrypt = crypto.AES.encrypt(phoneId,'anykeyhere').toString();
+            let phoneNumberIdEncrypt = crypto.AES.encrypt(phoneNumberId,'anykeyhere').toString();
             let businessIdEncrypt = crypto.AES.encrypt(businessId, 'anykeyhere').toString();
 
             const configEncrypt = {
                 phoneNumber: phoneNumber,
                 secretToken: tokenEncrypt,
-                phoneNumberId: phoneIdEncrypt,
+                phoneNumberId: phoneNumberIdEncrypt,
                 businessId: businessIdEncrypt,
                 userId: auth?.data?.responseData?._id
             }
@@ -135,7 +135,7 @@ const Settings = () => {
             <label >
                 Insert number id:
             </label>
-            <input type="text" disabled = {isDisabled.phone_id} onChange={handleChangeId} value = {phoneId}/>
+            <input type="text" disabled = {isDisabled.phone_id} onChange={handleChangeId} value = {phoneNumberId}/>
             <IconButton onClick = {() => handleClick('phone_id')}>
              <EditIcon/>
             </IconButton>
