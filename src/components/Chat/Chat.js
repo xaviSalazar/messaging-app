@@ -12,10 +12,8 @@ import { newIncomingMessage } from '../../redux/NewMessages/Actions'
 var testeo = true;
 
 const reducer = (state, action) => {
-
     if(action.type === "ADD_MESSAGE") {
         const new_message = action.payload;
-        //console.log(new_message)
         state.push(new_message)
         return [...state]        
     }
@@ -24,7 +22,6 @@ const reducer = (state, action) => {
         const messages = action.payload;
         return [...messages]
     }
-
 }
 
 let tokenId;

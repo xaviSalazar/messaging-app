@@ -1,6 +1,43 @@
 .table-responsive {
     margin: 30px 0;
 }
+
+.external {
+    display: flex;
+}
+
+.template__edit {
+	flex-direction: column;
+}
+
+.internal__button {
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+	display: flex;
+	background-color: #fff;
+    border-radius: 7.5px;
+    box-shadow: 0 1px 0.5px rgb(0 0 0 / 15%);
+    box-sizing: border-box;
+    flex-grow: 1;
+    margin: 2px 0 0 2px;
+    min-width: calc(50% - 2px);
+	color: #00a5f4;
+    font-size: 14px;
+    height: 34px;
+    line-height: 20px;
+    padding: 0 16px;
+    white-space: pre-wrap;
+}
+
+.buttons_type {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	flex-direction: row;
+	max-width: 210px;
+}
 .table-wrapper {
 	background: #fff;
 	padding: 20px 25px;
@@ -16,6 +53,72 @@
 	min-width: 100%;
 	margin: -20px -25px 10px;
 	border-radius: 3px 3px 0 0;
+}
+
+.chat__body {
+    display: flex;
+	flex-direction: column;
+    background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+    background-repeat: repeat;
+    background-position: center;
+    padding: 30px;
+    overflow: scroll;
+	max-width: 300px;
+}
+
+._6xe3 {
+    background-color: #fff;
+    border-radius: 7.5px;
+    border-top-left-radius: 0;
+    box-shadow: 0 1px 0.5px rgb(0 0 0 / 15%);
+    min-height: 20px;
+    position: relative;
+    word-wrap: break-word;
+	max-width: 210px;
+}
+
+._7zeb {
+    padding: 3px 3px 0 3px;
+	min-height: 200px;
+}
+
+._70ru {
+    position: relative;
+	
+}
+
+._6xdv {
+    color: #262626;
+    font-size: 13.6px;
+    line-height: 19px;
+    padding: 7px 7px 6px 9px;
+}
+
+._6xe4 {
+    color: #282828;
+    font-size: 13.6px;
+    white-space: pre-wrap;
+}
+
+._7qiw {
+    color: rgba(0, 0, 0, .45);
+    font-size: 13px;
+    line-height: 17px;
+    padding: 0 7px 8px 9px;
+}
+
+._7r3a {
+    background-image: url(https://static.xx.fbcdn.net/rsrc.php/v3/yL/r/NztUdBQHuX5.png);
+	height: 200px;
+	width: 200px;
+}
+
+._7r39 {
+    background-color: #ccd0d5;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 80px 80px;
+    border-radius: 4px;
 }
 
 .openModalBtn {

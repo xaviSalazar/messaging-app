@@ -13,11 +13,12 @@ const Settings = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [token, setToken] = useState('')
     const [phoneId, setPhoneId] = useState('')
+    const [businessId, setBusinessId] = useState('')
     const dispatch = useDispatch()
     let auth = useSelector(state => state.customerReducer.auth)
     
     // local state to input
-    const [isDisabled, setIsDisabled] = useState({ phone_num: true, what_token: true, phone_id: true});
+    const [isDisabled, setIsDisabled] = useState({ phone_num: true, what_token: true, phone_id: true, what_buss_id: true});
 
     useEffect(() => { 
 
@@ -33,6 +34,7 @@ const Settings = () => {
         setPhoneNumber(item.phoneNumber);
         setToken(item.token);
         setPhoneId(item.phoneId);
+        setBusinessId(item.businessId)
         //setInputValues(item)
     }, [])
 
@@ -50,6 +52,11 @@ const Settings = () => {
         if(value === 'phone_id') {
             let lock = !isDisabled.phone_id
             setIsDisabled({...isDisabled, phone_id: lock})
+        }
+
+        if(value == 'what_buss_id') {
+            let lock = !isDisabled.what_buss_id
+            setIsDisabled({...isDisabled, what_buss_id: lock})
         }
         //console.log(value)
        
@@ -70,27 +77,34 @@ const Settings = () => {
         //console.log('PHONEID value is:', phoneId);
     };
 
+    const handleBusinessId = event => {
+        setBusinessId(event.target.value)
+    }
+
 
     const setConfigurations = () => {
 
-        if( phoneNumber && token && phoneId)
+        if( phoneNumber && token && phoneId && businessId)
         {
             //console.log('clicked')
 
             const config = {
                 phoneNumber : phoneNumber,
                 token : token,
-                phoneId : phoneId
+                phoneId : phoneId,
+                businessId: businessId
             }
 
             //let phoneEncrypt = crypto.AES.encrypt(phoneNumber, 'anykeyhere').toString();
             let tokenEncrypt = crypto.AES.encrypt(token, 'anykeyhere').toString();
             let phoneIdEncrypt = crypto.AES.encrypt(phoneId,'anykeyhere').toString();
+            let businessIdEncrypt = crypto.AES.encrypt(businessId, 'anykeyhere').toString();
 
             const configEncrypt = {
                 phoneNumber: phoneNumber,
                 secretToken: tokenEncrypt,
                 phoneNumberId: phoneIdEncrypt,
+                businessId: businessIdEncrypt,
                 userId: auth?.data?.responseData?._id
             }
 
@@ -123,6 +137,14 @@ const Settings = () => {
             </label>
             <input type="text" disabled = {isDisabled.phone_id} onChange={handleChangeId} value = {phoneId}/>
             <IconButton onClick = {() => handleClick('phone_id')}>
+             <EditIcon/>
+            </IconButton>
+            <br/>
+            <label >
+                Insert whatsapp business account id:
+            </label>
+            <input type="text" disabled = {isDisabled.what_buss_id} onChange={handleBusinessId} value = {businessId}/>
+            <IconButton onClick = {() => handleClick('what_buss_id')}>
              <EditIcon/>
             </IconButton>
             <br/>

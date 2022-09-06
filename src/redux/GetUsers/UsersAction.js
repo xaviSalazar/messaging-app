@@ -1,4 +1,4 @@
-import { getAllUsers, searchUser } from "../../api";
+import { getAllUsers, searchUser} from "../../api";
 
 export const getUsers = (client) => async(dispatch) => {
     try {
