@@ -14,7 +14,7 @@ const FileUploadPage = () => {
 			const pipe = {
 				bucket: "myawsbucketwhatsapp",
 				...data.fields,
-				'Content-Type': 'jpg',
+				'Content-Type': event.target.files[0].type,
 				file: event.target.files[0]
 			};
 		const formData = new FormData();
