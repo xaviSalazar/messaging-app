@@ -9,6 +9,7 @@ import { httpManager } from '../../managers/httpManager';
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { newIncomingMessage } from '../../redux/NewMessages/Actions'
+import FileUploadPage from '../FileUploadPage/FileUploadPage'
 var testeo = true;
 
 const reducer = (state, action) => {
@@ -47,6 +48,31 @@ const Chat = (props) => {
     const [message, SetMessage] = useState("");
     const messagesEndRef = useRef(null)
     const [messagesList, dispatch] = useReducer(reducer, []);
+    const hiddenFileInput = React.useRef(null);
+    const [selectedFile, setSelectedFile] = useState();
+  
+    const handleClick = event => {
+        hiddenFileInput.current.click();
+    };
+
+    const handleChange = async (event) => {
+
+        setSelectedFile(event.target.files[0]);
+        console.log(event.target.files[0].type)
+        const {data} = await httpManager.getPresignedUrl(event.target.files[0].name)
+        const pipe = {
+            bucket: "myawsbucketwhatsapp",
+            ...data.fields,
+            'Content-Type':event.target.files[0].type ,
+            file: event.target.files[0]
+        };
+
+        const formData = new FormData();
+		for (const name in pipe) {
+			formData.append(name, pipe[name]);
+		}
+		await httpManager.uploadFileFromBrowser(data.url, formData)
+    };
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -64,11 +90,9 @@ const Chat = (props) => {
       }, [messagesList]);
     
     useEffect(() => {
-
         //console.log('useEFFECT chat js');
         //setMessageList(userMessages);
         if(selectedChat) testeo=false;
-
         const eventListener = ({ messages }) => {
             //console.log(`${trigger}, ${from}, ${msg}`)
             //console.log("dentro de listener cote chat"); 
@@ -83,7 +107,6 @@ const Chat = (props) => {
             }     
         };
 
-
         socket.on('user_answered', eventListener);
         return () => {
             socket.off('user_answered') 
@@ -93,9 +116,9 @@ const Chat = (props) => {
     const handleSubmit = async (e) => {
 
         e.preventDefault(); 
-        if (message === '') return;
-        // creates new conversation channel between two persons
-        // if(!messageList || !messageList.length) {
+
+        if (message === '' && (!selectedFile)) return;
+
             const channelUsers = [{
                 name: selectedChat.name,
                 phoneNumber: selectedChat.phoneNumber,
@@ -106,25 +129,42 @@ const Chat = (props) => {
                 userId: auth?.data?.responseData?._id,
             }];
             
-        //     const channelResponse = await httpManager.createChannel({channelUsers});
-        //     channelId = channelResponse.data.responseData._id;           
-        // } else {
-        //     const receiveId = await httpManager.getChannelList(selectedChat._id);
-        //     channelId = receiveId.data.responseData[0]._id;
-        // }
         const messages = [...messageList];
+        let msgReqData;
         // message I want to send to 
-        const msgReqData ={
-            name: auth?.data?.responseData?.lastName,
-            message,
-            to: selectedChat.phoneNumber,
-            type: "text",
-            from: numberId,
-            addedOn: new Date().getTime(),
-            senderID: 0, 
-            isRead: false
-        };  
-        if(!saved){ alert('insertar tokens primero'); return}
+        if(selectedFile) {
+            let filetype;
+           if(selectedFile.type === "image/jpeg") { filetype="image"}
+           else if(selectedFile.type === "application/pdf") {filetype="document"}
+
+            msgReqData ={
+                name: auth?.data?.responseData?.lastName,
+                message: `https://d1d5i0xjsb5dtw.cloudfront.net/${selectedFile.name}`,
+                to: selectedChat.phoneNumber,
+                type: filetype,
+                from: numberId,
+                addedOn: new Date().getTime(),
+                senderID: 0, 
+                isRead: false
+            }; 
+            setSelectedFile();   
+        } else {
+            msgReqData ={
+                name: auth?.data?.responseData?.lastName,
+                message,
+                to: selectedChat.phoneNumber,
+                type: "text",
+                from: numberId,
+                addedOn: new Date().getTime(),
+                senderID: 0, 
+                isRead: false
+            }; 
+         
+        }
+        
+
+        if(!saved){ alert('insertar tokens primero'); return }
+
             await httpManager.sendMessage({
                 channelUsers,
                 tokenId,
@@ -163,14 +203,21 @@ const Chat = (props) => {
                     <IconButton>
                         <SearchOutlined />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={handleClick}>
                         <AttachFile />
                     </IconButton>
+                    <input type="file" 
+                            ref={hiddenFileInput}
+                            onChange={handleChange}
+                            style={{display:'none'}}
+                    />
                     <IconButton>
                         <MoreVert/>
                     </IconButton>
                 </div>
             </div>
+            {selectedFile ? <img src={`https://d1d5i0xjsb5dtw.cloudfront.net/${selectedFile.name}`} width="400" height="500" /> 
+                          :
             <div className='chat__body'>
                 <button onClick={deleteALl}> Delete Messages</button>
 
@@ -180,8 +227,8 @@ const Chat = (props) => {
                     ))   
                 }
                 <div ref={messagesEndRef} />
-    
-            </div>
+            </div>}
+
             <div className='chat__footer'>
                 <InsertEmoticon />
                 {/* <Picker onEmojiClick={onEmojiClick} /> */}
