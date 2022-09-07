@@ -33,7 +33,7 @@ const Sidebar = (props) => {
             socket.off('new_user_contact') 
         }
 
-    }, [socket])
+    }, [socket, dispatch, auth?.data?.responseData?._id])
 
     const onSearchTextChanged = async (searchText) => {
         setSearchString(searchText);

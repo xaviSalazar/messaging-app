@@ -65,11 +65,11 @@ const SidebarChat = (props) => {
 
     useEffect( () => {
         findUnreadMessages(userMessages, userData, setNotRead)
-    }, [userMessages])
+    }, [userMessages, userData])
 
     useEffect(() => {
         filterMessages(newMessages, setShowInfo, userData, setArray, array)
-    }, [newMessages])
+    }, [newMessages, userData, array])
 
     return (
         <div className = "sidebarChat" onClick = {setMessageAndChat}>

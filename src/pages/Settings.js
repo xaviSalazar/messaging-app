@@ -54,7 +54,7 @@ const Settings = () => {
             setIsDisabled({...isDisabled, phone_id: lock})
         }
 
-        if(value == 'what_buss_id') {
+        if(value === 'what_buss_id') {
             let lock = !isDisabled.what_buss_id
             setIsDisabled({...isDisabled, what_buss_id: lock})
         }

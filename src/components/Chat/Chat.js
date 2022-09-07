@@ -9,7 +9,7 @@ import { httpManager } from '../../managers/httpManager';
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { newIncomingMessage } from '../../redux/NewMessages/Actions'
-import FileUploadPage from '../FileUploadPage/FileUploadPage'
+//import FileUploadPage from '../FileUploadPage/FileUploadPage'
 var testeo = true;
 
 const reducer = (state, action) => {
@@ -41,7 +41,7 @@ const Chat = (props) => {
 
     const userMessages  = useSelector((state) => state.getMessagesFromChannel);
     let auth = useSelector(state => state.customerReducer.auth);
-    let configsTokens = useSelector(state => state.configTokenReducer)
+    //let configsTokens = useSelector(state => state.configTokenReducer)
     const disparar = useDispatch();
     const {selectedChat, socket} = props;
     const [messageList, setMessageList] = useState([]);
@@ -216,7 +216,7 @@ const Chat = (props) => {
                     </IconButton>
                 </div>
             </div>
-            {selectedFile ? <img src={`https://d1d5i0xjsb5dtw.cloudfront.net/${selectedFile.name}`} width="400" height="500" /> 
+            {selectedFile ? <img alt='preview' src={`https://d1d5i0xjsb5dtw.cloudfront.net/${selectedFile.name}`} width="400" height="500" /> 
                           :
             <div className='chat__body'>
                 <button onClick={deleteALl}> Delete Messages</button>

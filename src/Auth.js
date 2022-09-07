@@ -1,9 +1,9 @@
-import doRegisterCustomer from './redux/Authentification/Actions'
-import doLoginCustomer from './redux/Authentification/Actions'
+//import doRegisterCustomer from './redux/Authentification/Actions'
+//import doLoginCustomer from './redux/Authentification/Actions'
 import {doCustomerAuth} from './redux/Authentification/Actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 
 const Auth = ({authRoute, redirectTo, children}) => {
 

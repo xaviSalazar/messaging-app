@@ -45,7 +45,7 @@ const ContactsList = () => {
         dispatch(getUsers(auth?.data?.responseData?._id))
         fetchData().catch(console.error)
 
-    }, [dispatch])
+    }, [dispatch, auth?.data?.responseData?._id])
 
     const SelectionTemplate = () => {
 
@@ -90,6 +90,7 @@ const ContactsList = () => {
                             </div>
                     } else { header = null }
                 }
+                return header
             })
         return header
     }
@@ -109,6 +110,7 @@ const ContactsList = () => {
                                </div>
                     } else { body = null }
                 }
+                return body
             })
         return body
     }
@@ -126,6 +128,7 @@ const ContactsList = () => {
                     } else {footer = null}
 
                 }
+                return footer;
             })
 
         return footer;
@@ -135,10 +138,10 @@ const ContactsList = () => {
         let buttons_array;
         example && example.components.map(
             item => {
-                if(item.type == 'BUTTONS')
+                if(item.type === 'BUTTONS')
                 {
                     if(item.buttons){
-                        buttons_array = <div className="buttons_type">
+                        buttons_array =  <div className="buttons_type">
                                         {
                                         item.buttons.map(item => {
                                          return <div className="internal__button">
@@ -149,8 +152,9 @@ const ContactsList = () => {
                                         </div>
                     } else {buttons_array=null}
                 }
+                return buttons_array;
             })
-        return buttons_array;
+            return buttons_array;
     }
 
     const SendMessage = async () => {
