@@ -69,7 +69,7 @@ const SidebarChat = (props) => {
 
     useEffect(() => {
         filterMessages(newMessages, setShowInfo, userData, setArray, array)
-    }, [newMessages, userData, array])
+    }, [newMessages, userData])
 
     return (
         <div className = "sidebarChat" onClick = {setMessageAndChat}>
