@@ -176,28 +176,37 @@ const ContactsList = () => {
         const new_comp = variable['template']['components'].map(p=> 
             p.type === "HEADER" 
              ? {...p, parameters: [{type: format, [format]: {link: value}}]} : p );
-
         variable['template']['components'] = new_comp
-        console.log(variable)
+        // console.log(variable)
+        setInitConvTemplate(variable)
         setInstante(value)
-        console.log(instante)
+        // console.log(instante)
     }
 
     const [newState, setNewState] = useState([]);
 
     const handleArrayInput = (e, i, mapArray) => {
         const {value} = e.target
+        // take table from memory
         var table = [...newState]
         table[i] = value
+        // save to memory 
         setNewState(table)
         // hold latest value 
         mapArray[i] = value
+        // copy elements
         const variable = mapArray.map((item, index) => (
             typeof item === 'object' ? table[index] : item
-            )
-        )
-        let text = variable.join("")
-        console.log(text)
+        ))
+        // join all words into single text
+        let text_joined = variable.join("")
+        const older_template = {...initConvTemplate}
+        const new_comp = older_template['template']['components'].map(p=> 
+            p.type === "BODY" 
+             ? {...p, parameters: [{type: "text", text: text_joined}]} : p );
+        older_template['template']['components'] = new_comp
+        setInitConvTemplate(older_template)
+        console.log(older_template)
     }
 
     const EditParametersTemplate = example && example.components.map(
