@@ -10,6 +10,7 @@ import { httpManager } from '../managers/httpManager';
 import { Button } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import { AddCircleOutlineOutlined } from "@material-ui/icons";
+import reactStringReplace from 'react-string-replace';
 
 const initialState = {
     messaging_product: "whatsapp",
@@ -49,7 +50,7 @@ const ContactsList = () => {
         variable['name'] = payload.name
         const componentes = []
         function buildComponents(item, index, arr) {
-            console.log(item)
+            // console.log(item)
             if(item.type === 'HEADER') {
                 if (item.format === 'DOCUMENT' ||
                         item.format === 'IMAGE' ||
@@ -182,15 +183,40 @@ const ContactsList = () => {
         console.log(instante)
     }
 
+    const [newState, setNewState] = useState([]);
+
+    const handleArrayInput = (e, i, mapArray) => {
+        const {value} = e.target
+        var table = [...newState]
+        table[i] = value
+        setNewState(table)
+        // hold latest value 
+        mapArray[i] = value
+        const variable = mapArray.map((item, index) => (
+            typeof item === 'object' ? table[index] : item
+            )
+        )
+        let text = variable.join("")
+        console.log(text)
+    }
+
     const EditParametersTemplate = example && example.components.map(
             (item,index) => {
-                // console.log(item.type)
+                // console.log(item.type)   
+                let body;
                 if (item.type === 'HEADER') {
                     if (item.format === 'DOCUMENT' ||
                         item.format === 'IMAGE' ||
                         item.format === 'VIDEO') {
                         return <label key={index}>Image Link: <input type="text" value={instante} name="data" onChange={(e) => handleLink(e, item.format)}/></label>
                     } else { return null }
+                }
+
+                if (item.type === 'BODY') {
+                     const mapArray = reactStringReplace(item.text,/{{(\d+)}}/g, (match, i) => {
+                         return <input type="text" value={newState[i]} onChange={(e) => handleArrayInput(e, i, mapArray)}/>
+                     })
+                     return <div> {mapArray} </div>;
                 }
             }
         )
