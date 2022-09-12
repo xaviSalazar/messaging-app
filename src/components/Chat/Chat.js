@@ -50,6 +50,7 @@ const Chat = (props) => {
     const [messagesList, dispatch] = useReducer(reducer, []);
     const hiddenFileInput = React.useRef(null);
     const [selectedFile, setSelectedFile] = useState();
+    const [initTemplate, setInitTemplate] = useState();
   
     const handleClick = event => {
         hiddenFileInput.current.click();

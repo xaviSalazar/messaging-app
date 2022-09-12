@@ -11,6 +11,21 @@ import { Button } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import { AddCircleOutlineOutlined } from "@material-ui/icons";
 
+const initialState = {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: "PHONE_NUMBER",
+    type: "template",
+    template: {
+      name: "TEMPLATE_NAME",
+      language: {
+        code: "LANGUAGE_AND_LOCALE_CODE"
+      },
+    components: []
+    }
+}
+
+
 const ContactsList = () => {
 
     let auth = useSelector(state => state.customerReducer.auth)
@@ -21,6 +36,58 @@ const ContactsList = () => {
     const contactsList = useSelector((state) => state.getUsers);
     const [templates, setTemplates] = useState()
     const [example, setExample] = useState()
+    const [initConvTemplate, setInitConvTemplate] = useState(initialState);
+    const dispatch = useDispatch();
+
+   
+
+
+    const buildBusinessPayload = (payload) => {
+        const variable = {...initConvTemplate}
+        console.log(variable)
+        variable['template']['language']['code'] = payload.language                
+        variable['name'] = payload.name
+        const componentes = []
+        function buildComponents(item, index, arr) {
+            console.log(item)
+            if(item.type === 'HEADER') {
+                if (item.format === 'DOCUMENT' ||
+                        item.format === 'IMAGE' ||
+                        item.format === 'VIDEO') {
+                            const type_doc = item.format
+                            const header = {type: item.type,}
+                            const parameters = []
+                            const listing_parameters = {type: item.format,}
+                            listing_parameters[type_doc] = {link: ""}
+                            parameters.push(listing_parameters)
+                            header['parameters'] = parameters
+                            componentes.push(header);
+                        } else if (item.format === 'TEXT') {
+                            const type_doc = item.format
+                            const header = {type: item.type,}
+                            const parameters = []
+                            const listing_parameters ={type: item.format,}
+                            listing_parameters[type_doc] = {text: item.text}
+                            parameters.push(listing_parameters)
+                            header['parameters'] = parameters
+                            componentes.push(header);
+                        }
+            } else if(item.type === 'BODY') {
+                const body = {type: item.type,}
+                const parameters = []
+                const listing_parameters = {type: "text", text: item.text}
+                parameters.push(listing_parameters)
+                body['parameters'] = parameters
+                componentes.push(body);
+            } else if(item.type === 'BUTTONS') {
+
+            }
+        }
+        variable['template']['components'] = componentes
+        payload.components.forEach(buildComponents)
+        console.log(variable)
+        setInitConvTemplate(variable)
+    }
 
     // Add/Remove checked item from list
     const handleCheck = (event) => {
@@ -33,13 +100,14 @@ const ContactsList = () => {
         setChecked(updatedList)
     };
 
-    const dispatch = useDispatch();
+  
 
     useEffect(() => {
 
         const fetchData = async () => {
             const templ = await httpManager.getWhatsappTemplates(auth?.data?.responseData?._id)
             setTemplates(templ.data.responseData.data)
+           
         }
 
         dispatch(getUsers(auth?.data?.responseData?._id))
@@ -47,23 +115,27 @@ const ContactsList = () => {
 
     }, [dispatch, auth?.data?.responseData?._id])
 
+    const [valueSelect, setValueSelect] = useState()
     const SelectionTemplate = () => {
-
         const handleChange = event => {
             let object_name = event.target.value
+            console.log(event.target.value)
+            setValueSelect(event.target.value)
             var objectToFilter = templates.filter(function (single) {
                 return single.name === object_name
             });
             let temp = objectToFilter.pop();
-            // console.log(temp)
+            console.log(temp)
             setExample(temp)
+
+            buildBusinessPayload(temp);
         };
 
         return (
             <div>
-                <select onClick={handleChange} name="template" id="template-select">
-                    {templates && templates.map(option => (
-                        <option key={option.id} value={option.name}>
+                <select onChange={handleChange} value={valueSelect} name="template" id="template-select">
+                    {templates && templates.map((option,index) => (
+                        <option key={index} value={option.name}>
                             {option.name}
                         </option>
                     ))}
@@ -95,6 +167,38 @@ const ContactsList = () => {
         return header
     }
 
+    const [instante, setInstante] = useState()
+    
+    const handleLink = (e, format) => {
+        const {value} = e.target
+        const variable = {...initConvTemplate}
+        const new_comp = variable['template']['components'].map(p=> 
+            p.type === "HEADER" 
+             ? {...p, parameters: [{type: format, [format]: {link: value}}]} : p );
+
+        variable['template']['components'] = new_comp
+        console.log(variable)
+        setInstante(value)
+        console.log(instante)
+    }
+
+    const EditParametersTemplate = example && example.components.map(
+            (item,index) => {
+                // console.log(item.type)
+                if (item.type === 'HEADER') {
+                    if (item.format === 'DOCUMENT' ||
+                        item.format === 'IMAGE' ||
+                        item.format === 'VIDEO') {
+                        return <label key={index}>Image Link: <input type="text" value={instante} name="data" onChange={(e) => handleLink(e, item.format)}/></label>
+                    } else { return null }
+                }
+            }
+        )
+
+    const [valor, setValor] = useState('')
+    const handleText = (e) => {setValor(e.target.value)}
+
+
     const RenderBody = () => {
         let body;
         example && example.components.map(
@@ -102,7 +206,6 @@ const ContactsList = () => {
                 
                 if (item.type === 'BODY') {
                     if (item.text) {
-                      
                         body = <div className="6xdv">
                                <span className="6xe4">
                                 {item.text}
@@ -187,6 +290,7 @@ const ContactsList = () => {
                 phoneNumber: numberId,
                 userId: auth?.data?.responseData?._id,
             }];
+
             await httpManager.sendBusinessMessage({
                 channelUsers,
                 tokenId,
@@ -217,7 +321,7 @@ const ContactsList = () => {
                             </div>           
                                 <RenderButtons/>
                         </div>
-                        <div className="template__edit">hola</div>
+                        <div className="template__edit">{EditParametersTemplate}</div>
                     </div>
                     {/* end small section to draw example message */}
                     <div className="table-wrapper">
