@@ -26,9 +26,7 @@ const initialState = {
     }
 }
 
-
 const ContactsList = () => {
-
     let auth = useSelector(state => state.customerReducer.auth)
     //const [openModal, setOpenModal] = useState(false)
     const [openForm, setOpenForm] = useState(false)
@@ -40,14 +38,11 @@ const ContactsList = () => {
     const [initConvTemplate, setInitConvTemplate] = useState(initialState);
     const dispatch = useDispatch();
 
-   
-
-
     const buildBusinessPayload = (payload) => {
         const variable = {...initConvTemplate}
-        console.log(variable)
+        //console.log(variable)
         variable['template']['language']['code'] = payload.language                
-        variable['name'] = payload.name
+        variable['template']['name'] = payload.name
         const componentes = []
         function buildComponents(item, index, arr) {
             // console.log(item)
@@ -55,31 +50,37 @@ const ContactsList = () => {
                 if (item.format === 'DOCUMENT' ||
                         item.format === 'IMAGE' ||
                         item.format === 'VIDEO') {
-                            const type_doc = item.format
-                            const header = {type: item.type,}
+                            const type_doc = item.format.toLowerCase();
+                            const header = {type: item.type.toLowerCase(),}
                             const parameters = []
-                            const listing_parameters = {type: item.format,}
+                            const listing_parameters = {type: item.format.toLowerCase(),}
                             listing_parameters[type_doc] = {link: ""}
                             parameters.push(listing_parameters)
                             header['parameters'] = parameters
                             componentes.push(header);
-                        } else if (item.format === 'TEXT') {
-                            const type_doc = item.format
-                            const header = {type: item.type,}
-                            const parameters = []
-                            const listing_parameters ={type: item.format,}
-                            listing_parameters[type_doc] = {text: item.text}
-                            parameters.push(listing_parameters)
-                            header['parameters'] = parameters
-                            componentes.push(header);
-                        }
+                        } 
+                        //      else if (item.format === 'TEXT') {
+                        //     const type_doc = item.format.toLowerCase();
+                        //     const header = {type: item.type.toLowerCase(),}
+                        //     const parameters = []
+                        //     const listing_parameters ={type: item.format.toLowerCase(),}
+                        //     listing_parameters[type_doc] = item.text
+                        //     parameters.push(listing_parameters)
+                        //     header['parameters'] = parameters
+                        //     componentes.push(header);
+                        // }
             } else if(item.type === 'BODY') {
-                const body = {type: item.type,}
+                // verify if i need to send variables
+                let regVar = /{{(\d+)}}/g
+                console.log(regVar.test(item.text))
+                if(regVar.test(item.text)) {
+                const body = {type: item.type.toLowerCase(),}
                 const parameters = []
                 const listing_parameters = {type: "text", text: item.text}
                 parameters.push(listing_parameters)
                 body['parameters'] = parameters
                 componentes.push(body);
+                }
             } else if(item.type === 'BUTTONS') {
 
             }
@@ -104,31 +105,27 @@ const ContactsList = () => {
   
 
     useEffect(() => {
-
         const fetchData = async () => {
             const templ = await httpManager.getWhatsappTemplates(auth?.data?.responseData?._id)
             setTemplates(templ.data.responseData.data)
            
         }
-
         dispatch(getUsers(auth?.data?.responseData?._id))
         fetchData().catch(console.error)
-
     }, [dispatch, auth?.data?.responseData?._id])
 
     const [valueSelect, setValueSelect] = useState()
     const SelectionTemplate = () => {
         const handleChange = event => {
             let object_name = event.target.value
-            console.log(event.target.value)
+            //console.log(event.target.value)
             setValueSelect(event.target.value)
             var objectToFilter = templates.filter(function (single) {
                 return single.name === object_name
             });
             let temp = objectToFilter.pop();
-            console.log(temp)
             setExample(temp)
-
+            console.log(temp)
             buildBusinessPayload(temp);
         };
 
@@ -147,7 +144,6 @@ const ContactsList = () => {
 
 
     const RenderHeader = () => {
-
         let header;
         example && example.components.map(
             item => {
@@ -171,13 +167,15 @@ const ContactsList = () => {
     const [instante, setInstante] = useState()
     
     const handleLink = (e, format) => {
+        // use lowercase here
         const {value} = e.target
+        console.log(value)
         const variable = {...initConvTemplate}
         const new_comp = variable['template']['components'].map(p=> 
-            p.type === "HEADER" 
-             ? {...p, parameters: [{type: format, [format]: {link: value}}]} : p );
+            p.type === "header" 
+             ? {...p, parameters: [{type: format.toLowerCase(), [format.toLowerCase()]: {link: value}}]} : p );
         variable['template']['components'] = new_comp
-        // console.log(variable)
+        console.log(variable)
         setInitConvTemplate(variable)
         setInstante(value)
         // console.log(instante)
@@ -192,18 +190,23 @@ const ContactsList = () => {
         table[i] = value
         // save to memory 
         setNewState(table)
-        // hold latest value 
-        mapArray[i] = value
-        // copy elements
-        const variable = mapArray.map((item, index) => (
-            typeof item === 'object' ? table[index] : item
+        console.log(table)
+        const nueva = table.filter(item => typeof item !== 'undefined').map((item, index) => (
+            {type: "text", text:item} 
         ))
+        console.log(nueva)
+        // hold latest value 
+        // mapArray[i] = value
+        // // copy elements
+        // const variable = mapArray.map((item, index) => (
+        //     typeof item === 'object' ? table[index] : item
+        // ))
         // join all words into single text
-        let text_joined = variable.join("")
+        // let text_joined = variable.join("")
         const older_template = {...initConvTemplate}
         const new_comp = older_template['template']['components'].map(p=> 
-            p.type === "BODY" 
-             ? {...p, parameters: [{type: "text", text: text_joined}]} : p );
+            p.type === "body" 
+             ? {...p, parameters: nueva} : p );
         older_template['template']['components'] = new_comp
         setInitConvTemplate(older_template)
         console.log(older_template)
@@ -211,8 +214,6 @@ const ContactsList = () => {
 
     const EditParametersTemplate = example && example.components.map(
             (item,index) => {
-                // console.log(item.type)   
-                let body;
                 if (item.type === 'HEADER') {
                     if (item.format === 'DOCUMENT' ||
                         item.format === 'IMAGE' ||
@@ -220,7 +221,6 @@ const ContactsList = () => {
                         return <label key={index}>Image Link: <input type="text" value={instante} name="data" onChange={(e) => handleLink(e, item.format)}/></label>
                     } else { return null }
                 }
-
                 if (item.type === 'BODY') {
                      const mapArray = reactStringReplace(item.text,/{{(\d+)}}/g, (match, i) => {
                          return <input type="text" value={newState[i]} onChange={(e) => handleArrayInput(e, i, mapArray)}/>
@@ -228,11 +228,7 @@ const ContactsList = () => {
                      return <div> {mapArray} </div>;
                 }
             }
-        )
-
-    const [valor, setValor] = useState('')
-    const handleText = (e) => {setValor(e.target.value)}
-
+    )
 
     const RenderBody = () => {
         let body;
@@ -302,19 +298,27 @@ const ContactsList = () => {
         const configs = JSON.parse(saved);
         const tokenId = configs.token;
         const numberId = configs.phoneNumberId
+        // change phone number in msg template
         // treat the whole array with data
+        const bsn_msg = {...initConvTemplate}
+       
+        console.log(bsn_msg)
         const sendArrayMessage = async (item) => {
+            // array with list of recipients
             const obj = JSON.parse(item)
+            // edit template to send with different number
+            bsn_msg['to'] = obj.phoneNumber
             const msgReqData = {
                 name: obj.name,
                 from: numberId,
                 to: obj.phoneNumber,
-                type: "text",
-                message: "bussiness_initiated_message",
+                type: "template",
+                message: bsn_msg,
                 addedOn: new Date().getTime(),
                 senderID: 0,
                 isRead: false,
             }
+            console.log(msgReqData)
             // create data in case to create a channel conversation
             const channelUsers = [{
                 name: obj.name,
