@@ -7,6 +7,18 @@
     justify-content: center;
     align-items: center;
   }
+
+  .PhoneInput {
+    display: flex;
+  }
+  .PhoneInputCountryIconImg {
+    width: 5vh;
+    height: 5vh;
+  }
+
+  .PhoneInputCountrySelect {
+    height: 28px;
+  }
   
   .modalContainer {
     width: 500px;

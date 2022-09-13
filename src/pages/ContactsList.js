@@ -12,6 +12,9 @@ import { Send } from "@material-ui/icons";
 import { AddCircleOutlineOutlined } from "@material-ui/icons";
 import reactStringReplace from 'react-string-replace';
 
+
+// template initial state
+// Note: Do not put unnecessary elements in components
 const initialState = {
     messaging_product: "whatsapp",
     recipient_type: "individual",
@@ -36,6 +39,7 @@ const ContactsList = () => {
     const [templates, setTemplates] = useState()
     const [example, setExample] = useState()
     const [initConvTemplate, setInitConvTemplate] = useState(initialState);
+    const [detailTemplate, setDetailTemplate] = useState()
     const dispatch = useDispatch();
 
     const buildBusinessPayload = (payload) => {
@@ -45,7 +49,6 @@ const ContactsList = () => {
         variable['template']['name'] = payload.name
         const componentes = []
         function buildComponents(item, index, arr) {
-            // console.log(item)
             if(item.type === 'HEADER') {
                 if (item.format === 'DOCUMENT' ||
                         item.format === 'IMAGE' ||
@@ -72,7 +75,6 @@ const ContactsList = () => {
             } else if(item.type === 'BODY') {
                 // verify if i need to send variables
                 let regVar = /{{(\d+)}}/g
-                console.log(regVar.test(item.text))
                 if(regVar.test(item.text)) {
                 const body = {type: item.type.toLowerCase(),}
                 const parameters = []
@@ -102,58 +104,55 @@ const ContactsList = () => {
         setChecked(updatedList)
     };
 
-  
-
     useEffect(() => {
         const fetchData = async () => {
             const templ = await httpManager.getWhatsappTemplates(auth?.data?.responseData?._id)
-            setTemplates(templ.data.responseData.data)
-           
+            const loaded_templates = templ.data.responseData.data.filter(item => item.status === 'APPROVED').map(item => item)
+            setTemplates(loaded_templates)
         }
         dispatch(getUsers(auth?.data?.responseData?._id))
         fetchData().catch(console.error)
     }, [dispatch, auth?.data?.responseData?._id])
 
     const [valueSelect, setValueSelect] = useState()
+
     const SelectionTemplate = () => {
         const handleChange = event => {
             let object_name = event.target.value
-            //console.log(event.target.value)
             setValueSelect(event.target.value)
             var objectToFilter = templates.filter(function (single) {
                 return single.name === object_name
             });
             let temp = objectToFilter.pop();
             setExample(temp)
+            setDetailTemplate(temp)
             console.log(temp)
             buildBusinessPayload(temp);
         };
 
         return (
             <div>
-                <select onChange={handleChange} value={valueSelect} name="template" id="template-select">
+                {templates && <select onChange={handleChange} value={valueSelect} name="template" id="template-select">
                     {templates && templates.map((option,index) => (
                         <option key={index} value={option.name}>
                             {option.name}
                         </option>
                     ))}
-                </select>
+                </select>}
             </div>
         );
     }
 
-
     const RenderHeader = () => {
         let header;
         example && example.components.map(
-            item => {
-                // console.log(item.type)
+            (item,index) => {
                 if (item.type === 'HEADER') {
                     if (item.format === 'DOCUMENT' ||
                         item.format === 'IMAGE' ||
                         item.format === 'VIDEO') {
                         header =
-                            <div className="_7zeb">
+                            <div key = {index} className="_7zeb">
                                 <div className="_7r3a _7r39">
                                 </div>
                             </div>
@@ -170,6 +169,15 @@ const ContactsList = () => {
         // use lowercase here
         const {value} = e.target
         console.log(value)
+        // handling other comp to send
+        const example_template = {...detailTemplate} 
+        const new_example_template = example_template['components'].map(p =>
+            p.type==="HEADER"
+            ? {...p, example: value} : p);
+        example_template['components'] = new_example_template
+        setDetailTemplate(example_template)
+        console.log(example_template)
+
         const variable = {...initConvTemplate}
         const new_comp = variable['template']['components'].map(p=> 
             p.type === "header" 
@@ -178,7 +186,6 @@ const ContactsList = () => {
         console.log(variable)
         setInitConvTemplate(variable)
         setInstante(value)
-        // console.log(instante)
     }
 
     const [newState, setNewState] = useState([]);
@@ -194,15 +201,24 @@ const ContactsList = () => {
         const nueva = table.filter(item => typeof item !== 'undefined').map((item, index) => (
             {type: "text", text:item} 
         ))
-        console.log(nueva)
         // hold latest value 
-        // mapArray[i] = value
-        // // copy elements
-        // const variable = mapArray.map((item, index) => (
-        //     typeof item === 'object' ? table[index] : item
-        // ))
+        mapArray[i] = value
+        // copy elements
+        const variable = mapArray.map((item, index) => (
+            typeof item === 'object' ? table[index] : item
+        ))
+
         // join all words into single text
-        // let text_joined = variable.join("")
+        let text_joined = variable.join("")
+        const example_template = {...detailTemplate} 
+        const new_example_template = example_template['components'].map(p =>
+            p.type==="BODY"
+            ? {...p, text: text_joined} : p);
+        example_template['components'] = new_example_template
+        console.log(example_template)
+        setDetailTemplate(example_template)
+        // setExample(example_template)
+
         const older_template = {...initConvTemplate}
         const new_comp = older_template['template']['components'].map(p=> 
             p.type === "body" 
@@ -218,7 +234,7 @@ const ContactsList = () => {
                     if (item.format === 'DOCUMENT' ||
                         item.format === 'IMAGE' ||
                         item.format === 'VIDEO') {
-                        return <label key={index}>Image Link: <input type="text" value={instante} name="data" onChange={(e) => handleLink(e, item.format)}/></label>
+                        return <label key={index}>{`${item.format}: `}<input type="text" value={instante} name="data" onChange={(e) => handleLink(e, item.format)}/></label>
                     } else { return null }
                 }
                 if (item.type === 'BODY') {
@@ -232,12 +248,11 @@ const ContactsList = () => {
 
     const RenderBody = () => {
         let body;
-        example && example.components.map(
-            item => {
-                
+        detailTemplate && detailTemplate.components.map(
+            (item, index) => {  
                 if (item.type === 'BODY') {
                     if (item.text) {
-                        body = <div className="6xdv">
+                        body = <div key={index} className="6xdv">
                                <span className="6xe4">
                                 {item.text}
                                </span>
@@ -252,11 +267,11 @@ const ContactsList = () => {
     const RenderFooter = () => {
         let footer;
         example && example.components.map(
-            item => {
+            (item,index) => {
                 if (item.type === 'FOOTER')
                 {
                     if(item.text) {
-                        footer =  <div className="_7qiw" dir="auto">
+                        footer =  <div key={index} className="_7qiw" dir="auto">
                                     {item.text}
                                  </div>
                     } else {footer = null}
@@ -277,8 +292,8 @@ const ContactsList = () => {
                     if(item.buttons){
                         buttons_array =  <div className="buttons_type">
                                         {
-                                        item.buttons.map(item => {
-                                         return <div className="internal__button">
+                                        item.buttons.map((item,index) => {
+                                         return <div key={index} className="internal__button">
                                                 <span>{item.text}</span>
                                                  </div>
                                         })
@@ -313,7 +328,9 @@ const ContactsList = () => {
                 from: numberId,
                 to: obj.phoneNumber,
                 type: "template",
-                message: bsn_msg,
+                template: bsn_msg,
+                components: detailTemplate.components,
+                message: "business_message",
                 addedOn: new Date().getTime(),
                 senderID: 0,
                 isRead: false,
