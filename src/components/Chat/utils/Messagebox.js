@@ -4,6 +4,8 @@ import ReactAudioPlayer from 'react-audio-player'
 
 const renderType = (userDataMessage) => {
     switch(userDataMessage.type) {
+        case 'button':
+          return <span className= 'chat__paragraph'>{userDataMessage.message}</span>;
         case 'text':
           return <span className= 'chat__paragraph'>{userDataMessage.message}</span>;
         case 'image':
