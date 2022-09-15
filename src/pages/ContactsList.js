@@ -41,6 +41,7 @@ const ContactsList = () => {
     const [initConvTemplate, setInitConvTemplate] = useState(initialState);
     const [detailTemplate, setDetailTemplate] = useState()
     const dispatch = useDispatch();
+    const [val, setVal] = useState(false)
 
     const buildBusinessPayload = (payload) => {
         const variable = {...initConvTemplate}
@@ -96,11 +97,15 @@ const ContactsList = () => {
     // Add/Remove checked item from list
     const handleCheck = (event) => {
         var updatedList = [...checked];
+        
         if (event.target.checked) {
             updatedList = [...checked, event.target.value];
+            console.log(updatedList)
         } else {
+            console.log(checked)
             updatedList.splice(checked.indexOf(event.target.value), 1);
         }
+        console.log(updatedList)
         setChecked(updatedList)
     };
 
@@ -415,12 +420,12 @@ const ContactsList = () => {
                         <table className="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>Select Item</th>
-                                    <th>Name</th>
+                                    <th><input value={"all"} type="checkbox" /></th>
+                                    <th>Nombres</th>
                                     <th>Email</th>
                                     {/*<th>Address</th> */}
-                                    <th>Phone</th>
-                                    <th>Actions</th>
+                                    <th>Telefono</th>
+                                    <th>Editar</th>
                                 </tr>
                             </thead>
                             <tbody>

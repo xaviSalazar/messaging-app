@@ -34,6 +34,7 @@ function App() {
 
 
   useEffect( () => {
+    
     const sessionID = getWithExpiry("sessionID")
     if(sessionID)  {
         console.log(`inside sessionID: ${sessionID}`)
@@ -46,8 +47,9 @@ function App() {
         if(tokens) {
             const item = JSON.parse(tokens);
             const username = item.phoneNumberId
+            const userDatabaseId = item.userId
             //console.log(username)
-            socket.auth = { username }
+            socket.auth = { username, userDatabaseId}
             socket.connect()
         }
     }
