@@ -96,7 +96,7 @@ const Chat = (props) => {
         if(selectedChat) testeo=false;
         const eventListener = ({ messages }) => {
             //console.log(`${trigger}, ${from}, ${msg}`)
-            // console.log("new incoming message"); 
+            console.log("new incoming message im in chat js"); 
             disparar(newIncomingMessage(messages))
             if(selectedChat)
             {

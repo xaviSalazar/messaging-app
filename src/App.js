@@ -38,7 +38,6 @@ function App() {
     const sessionID = getWithExpiry("sessionID")
     if(sessionID)  {
         console.log(`inside sessionID: ${sessionID}`)
-        //console.log(sessionID)
         socket.auth = { sessionID }
         socket.connect()
     } else {
@@ -56,9 +55,6 @@ function App() {
 
 }, [configsTokens])
 
-  // if(auth)
-  //   console.log(auth?.data?.responseData?.lastName)
-   
   // set variables to use within whatsapp
   return (
     <>
