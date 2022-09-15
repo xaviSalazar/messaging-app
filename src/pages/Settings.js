@@ -92,7 +92,8 @@ const Settings = () => {
                 phoneNumber : phoneNumber,
                 token : token,
                 phoneNumberId : phoneNumberId,
-                businessId: businessId
+                businessId: businessId,
+                userId: auth?.data?.responseData?._id
             }
 
             //let phoneEncrypt = crypto.AES.encrypt(phoneNumber, 'anykeyhere').toString();

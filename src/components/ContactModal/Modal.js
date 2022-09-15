@@ -26,7 +26,7 @@ function MyForm({ closeForm }) {
 
    
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
       event.preventDefault();
       let phoneNumber = valor.slice(1)
       const data = {
@@ -34,7 +34,7 @@ function MyForm({ closeForm }) {
         phoneNumber: phoneNumber,
         owner: auth.data.responseData._id
       }
-     createUser(data);
+     await createUser(data);
     }
 
     return (
