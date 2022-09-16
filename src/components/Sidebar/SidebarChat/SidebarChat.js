@@ -69,8 +69,8 @@ const SidebarChat = (props) => {
         await httpManager.checkMsgToRead(userData._id)
         setChat(userData);
         setUnreadMsg(0)
-        dispatch(getMessagesFromChannel(userData._id))
-        dispatch(clearMessages())
+       // dispatch(getMessagesFromChannel(userData._id))
+        //dispatch(clearMessages())
     }
 
     // useEffect( () => {

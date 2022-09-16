@@ -9,10 +9,15 @@ import { httpManager } from '../../managers/httpManager';
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { newIncomingMessage } from '../../redux/NewMessages/Actions'
+import { getMessagesFromChannel } from '../../redux/GetMessages/Actions'
 //import FileUploadPage from '../FileUploadPage/FileUploadPage'
 var testeo = true;
 
 const reducer = (state, action) => {
+    if( action.type === "RESET" ) {
+        return []
+    }
+
     if(action.type === "ADD_MESSAGE") {
         const new_message = action.payload;
         state.push(new_message)
@@ -21,8 +26,11 @@ const reducer = (state, action) => {
 
     if( action.type === "LOAD_MESSAGES" ) {
         const messages = action.payload;
-        return [...messages]
+        state = messages.concat(state)
+        return [...state]
     }
+
+    
 }
 
 let tokenId;
@@ -51,6 +59,8 @@ const Chat = (props) => {
     const hiddenFileInput = React.useRef(null);
     const [selectedFile, setSelectedFile] = useState();
     const [initTemplate, setInitTemplate] = useState();
+    const [pageNumber, setPageNumber] = useState(0);
+    const [loading, setLoading] = useState(false)
   
     const handleClick = event => {
         hiddenFileInput.current.click();
@@ -75,19 +85,34 @@ const Chat = (props) => {
 		await httpManager.uploadFileFromBrowser(data.url, formData)
     };
 
+    useEffect(() => {
+        dispatch({type: "RESET"})
+        setPageNumber(0);
+    }, [selectedChat?._id])
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
       }
    
-    //console.log("rendering chat component")
     useEffect(() => {
-        // if(!testeo)setMessageList(userMessages);
-        // load initial data 
         if(!testeo) dispatch({type: "LOAD_MESSAGES", payload: userMessages})
     }, [userMessages])
 
     useEffect(() => {
+        setLoading(true);
+        if(selectedChat) {
+            disparar(getMessagesFromChannel(selectedChat._id, pageNumber))}
+    }, [selectedChat?.name, pageNumber])
+
+    useEffect(() => {
         scrollToBottom()
+        const delayDebounce = setTimeout(() => {
+            setLoading(false)
+        },1000)
+
+        return () => {
+            clearTimeout(delayDebounce);
+          };
       }, [messagesList]);
     
     useEffect(() => {
@@ -102,7 +127,6 @@ const Chat = (props) => {
             {
                 if(selectedChat.phoneNumber === messages.from) {
                     dispatch({ type: "ADD_MESSAGE", payload: messages})
-                    //console.log('entro en true')
                     testeo = true;
                 }         
             }     
@@ -115,7 +139,7 @@ const Chat = (props) => {
     }, [socket, selectedChat, disparar])
 
     const handleSubmit = async (e) => {
-
+        SetMessage("");
         e.preventDefault(); 
 
         if (message === '' && (!selectedFile)) return;
@@ -126,7 +150,7 @@ const Chat = (props) => {
                 userId: selectedChat._id            
             },{
                 name: auth?.data?.responseData?.lastName,
-                phoneNumber: auth?.data?.responseData?.phoneNumberId,
+                phoneNumber: numberId,
                 userId: auth?.data?.responseData?._id,
             }];
             
@@ -175,7 +199,7 @@ const Chat = (props) => {
             messages.push(msgReqData);
             // internal use for message list 
             dispatch({ type: "ADD_MESSAGE", payload: msgReqData})
-            SetMessage("");
+            
     }
 
     const onMessageTextChanged = (typedText) => {
@@ -188,6 +212,20 @@ const Chat = (props) => {
             const receiveId = await httpManager.getChannelList(selectedChat._id);
             channelId = receiveId.data.responseData[0]._id;
             await httpManager.deleteALlMsg(channelId);
+    }
+
+    const loadMore = () => {
+        setPageNumber((prevPageNumber) => prevPageNumber + 1 )
+    }
+
+    const handleScroll = (e) => {
+
+        const { scrollTop } = e.currentTarget;
+        // console.log(scrollTop)
+        if(loading) {return}
+        if(scrollTop < 50) {
+            loadMore()
+        }
     }
 
 
@@ -219,7 +257,7 @@ const Chat = (props) => {
             </div>
             {selectedFile ? <img alt='preview' src={`https://d1d5i0xjsb5dtw.cloudfront.net/${selectedFile.name}`} width="400" height="500" /> 
                           :
-            <div className='chat__body'>
+            <div id = "messagesList" className='chat__body' onScroll={handleScroll}>
                 <button onClick={deleteALl}> Delete Messages</button>
 
                 {
