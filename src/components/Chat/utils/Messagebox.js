@@ -39,6 +39,9 @@ const Messagebox = (props) => {
                     <span className='chat__timestamp'>
                         {new Date(userDataMessage.addedOn).toUTCString()}
                     </span>
+                    <span className='chat__status'>
+                        {userDataMessage.status}
+                    </span>
         </p>
     )
 
