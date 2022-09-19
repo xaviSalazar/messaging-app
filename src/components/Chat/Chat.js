@@ -208,10 +208,10 @@ const Chat = (props) => {
 
     const deleteALl = async () => {
             setMessageList([]);
-            let channelId;
-            const receiveId = await httpManager.getChannelList(selectedChat._id);
-            channelId = receiveId.data.responseData[0]._id;
-            await httpManager.deleteALlMsg(channelId);
+            // let channelId;
+            // const receiveId = await httpManager.getChannelList(selectedChat._id);
+            // channelId = receiveId.data.responseData[0]._id;
+            await httpManager.deleteALlMsg(selectedChat.phoneNumber, numberId );
     }
 
     const loadMore = () => {
