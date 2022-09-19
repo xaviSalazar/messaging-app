@@ -32,8 +32,8 @@ const getAllUsers = async (client) => {
     return await axios.get(`${API_BASE_URL}/get-users?owner=${client}`)
 };
 
-const deleteALlMsg = async(channel_id) => {
-    return await axios.get(`${API_BASE_URL}/delete-messages?channel_id=${channel_id}`)
+const deleteALlMsg = async(contact, userApp) => {
+    return await axios.get(`${API_BASE_URL}/delete-messages?contact=${contact}&&userApp=${userApp}`)
 }
 
 const checkMsgToRead = async(user_id) => {
