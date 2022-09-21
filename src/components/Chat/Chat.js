@@ -30,7 +30,6 @@ const reducer = (state, action) => {
         return [...state]
     }
 
-    
 }
 
 let tokenId;
@@ -61,6 +60,7 @@ const Chat = (props) => {
     const [initTemplate, setInitTemplate] = useState();
     const [pageNumber, setPageNumber] = useState(0);
     const [loading, setLoading] = useState(false)
+    const [loadingFile, setLoadingFile] = useState(false)
   
     const handleClick = event => {
         hiddenFileInput.current.click();
@@ -69,25 +69,28 @@ const Chat = (props) => {
     const handleChange = async (event) => {
 
         setSelectedFile(event.target.files[0]);
+        console.log(event.target.files[0])
         console.log(event.target.files[0].type)
-        const {data} = await httpManager.getPresignedUrl(event.target.files[0].name)
+        const {data} = await httpManager.getPresignedUrl(event.target.files[0].name)   
         const pipe = {
             bucket: "myawsbucketwhatsapp",
             ...data.fields,
             'Content-Type':event.target.files[0].type ,
             file: event.target.files[0]
         };
-
         const formData = new FormData();
 		for (const name in pipe) {
 			formData.append(name, pipe[name]);
 		}
-		await httpManager.uploadFileFromBrowser(data.url, formData)
+		const {status} = await httpManager.uploadFileFromBrowser(data.url, formData)
+        if(status === 204) { setLoadingFile(true)} 
+        console.log(status)
     };
 
     useEffect(() => {
         dispatch({type: "RESET"})
         setPageNumber(0);
+        setLoadingFile(false)
     }, [selectedChat?._id])
 
     const scrollToBottom = () => {
@@ -140,6 +143,7 @@ const Chat = (props) => {
 
     const handleSubmit = async (e) => {
         SetMessage("");
+        setLoadingFile(false);
         e.preventDefault(); 
 
         if (message === '' && (!selectedFile)) return;
@@ -172,7 +176,9 @@ const Chat = (props) => {
                 senderID: 0, 
                 isRead: false
             }; 
+            console.log(msgReqData)
             setSelectedFile();   
+            
         } else {
             msgReqData ={
                 name: auth?.data?.responseData?.lastName,
@@ -255,7 +261,7 @@ const Chat = (props) => {
                     </IconButton>
                 </div>
             </div>
-            {selectedFile ? <img alt='preview' src={`https://d1d5i0xjsb5dtw.cloudfront.net/${selectedFile.name}`} width="400" height="500" /> 
+            {loadingFile ? <img alt='preview' src={`https://d1d5i0xjsb5dtw.cloudfront.net/${selectedFile.name}`} width="400" height="500" /> 
                           :
             <div id = "messagesList" className='chat__body' onScroll={handleScroll}>
                 <button onClick={deleteALl}> Delete Messages</button>

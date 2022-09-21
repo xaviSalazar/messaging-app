@@ -8,6 +8,7 @@
 
 .template__edit {
 	flex-direction: column;
+	max-width: 200px;
 }
 
 .internal__button {
@@ -108,7 +109,7 @@
 }
 
 ._7r3a {
-    background-image: url(https://static.xx.fbcdn.net/rsrc.php/v3/yL/r/NztUdBQHuX5.png);
+    /* background-image: url(https://static.xx.fbcdn.net/rsrc.php/v3/yL/r/NztUdBQHuX5.png); */
 	height: 200px;
 	width: 200px;
 }

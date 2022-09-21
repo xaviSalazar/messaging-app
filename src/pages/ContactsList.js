@@ -11,6 +11,7 @@ import { Button } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import { AddCircleOutlineOutlined } from "@material-ui/icons";
 import reactStringReplace from 'react-string-replace';
+import { LoadFiles } from "../components/LoadFiles/LoadFiles";
 
 
 // template initial state
@@ -40,8 +41,8 @@ const ContactsList = () => {
     const [example, setExample] = useState()
     const [initConvTemplate, setInitConvTemplate] = useState(initialState);
     const [detailTemplate, setDetailTemplate] = useState()
+    const [file, setFile] = useState()
     const dispatch = useDispatch();
-    const [val, setVal] = useState(false)
 
     const buildBusinessPayload = (payload) => {
         const variable = {...initConvTemplate}
@@ -90,7 +91,7 @@ const ContactsList = () => {
         }
         variable['template']['components'] = componentes
         payload.components.forEach(buildComponents)
-        console.log(variable)
+        //console.log(variable)
         setInitConvTemplate(variable)
     }
 
@@ -131,7 +132,6 @@ const ContactsList = () => {
             let temp = objectToFilter.pop();
             setExample(temp)
             setDetailTemplate(temp)
-            console.log(temp)
             buildBusinessPayload(temp);
         };
 
@@ -148,37 +148,38 @@ const ContactsList = () => {
         );
     }
 
-    const RenderHeader = () => {
-        let header;
-        example && example.components.map(
+    const RenderHeader = example && example.components.map(
             (item,index) => {
                 if (item.type === 'HEADER') {
                     if (item.format === 'DOCUMENT' ||
                         item.format === 'IMAGE' ||
                         item.format === 'VIDEO') {
-                        header =
-                            <div key = {index} className="_7zeb">
+                        
+                        return  <div key = {index} className="_7zeb">
                                 <div className="_7r3a _7r39">
+                                {file && (
+                                <a href={file.link} target="_blank" rel="noreferrer">
+                                <img alt="document" src= {file.link}
+                                width="200" height="200"/>
+                                </a>)}
+
                                 </div>
                             </div>
-                    } else { header = null }
-                }
-                return header
+                    } else { return null }
+                } else {return null} 
             })
-        return header
-    }
 
-    const [instante, setInstante] = useState()
-    
-    const handleLink = (e, format) => {
+    useEffect(() => {
+        console.log("added file")
+        console.log(file)
         // use lowercase here
-        const {value} = e.target
-        console.log(value)
         // handling other comp to send
+        if(!detailTemplate) {return}
         const example_template = {...detailTemplate} 
+        
         const new_example_template = example_template['components'].map(p =>
             p.type==="HEADER"
-            ? {...p, example: value} : p);
+            ? {...p, example: file.link} : p);
         example_template['components'] = new_example_template
         setDetailTemplate(example_template)
         console.log(example_template)
@@ -186,12 +187,11 @@ const ContactsList = () => {
         const variable = {...initConvTemplate}
         const new_comp = variable['template']['components'].map(p=> 
             p.type === "header" 
-             ? {...p, parameters: [{type: format.toLowerCase(), [format.toLowerCase()]: {link: value}}]} : p );
+             ? {...p, parameters: [{type: file.format.toLowerCase(), [file.format.toLowerCase()]: {link: file.link}}]} : p );
         variable['template']['components'] = new_comp
         console.log(variable)
         setInitConvTemplate(variable)
-        setInstante(value)
-    }
+    }, [file])
 
     const [newState, setNewState] = useState([]);
 
@@ -235,67 +235,58 @@ const ContactsList = () => {
 
     const EditParametersTemplate = example && example.components.map(
             (item,index) => {
+
                 if (item.type === 'HEADER') {
                     if (item.format === 'DOCUMENT' ||
                         item.format === 'IMAGE' ||
                         item.format === 'VIDEO') {
-                        return <label key={index}>{`${item.format}: `}<input type="text" value={instante} name="data" onChange={(e) => handleLink(e, item.format)}/></label>
+                        return <label key={index}>{`Cargar archivo tipo ${item.format}: `} <LoadFiles setFile = {setFile} format={item.format.toLowerCase()}/> </label>
                     } else { return null }
                 }
+
                 if (item.type === 'BODY') {
                      const mapArray = reactStringReplace(item.text,/{{(\d+)}}/g, (match, i) => {
-                         return <input type="text" value={newState[i]} onChange={(e) => handleArrayInput(e, i, mapArray)}/>
+                          return <input key={i} type="text" value={newState[i] || ""} onChange={(e) => handleArrayInput(e, i, mapArray)}/>
                      })
-                     return <div> {mapArray} </div>;
+                     return <div key="arrayEdit"> {mapArray} </div>;
                 }
+
+                return null
             }
     )
 
-    const RenderBody = () => {
-        let body;
-        detailTemplate && detailTemplate.components.map(
+    const RenderBody = detailTemplate && detailTemplate.components.map(
             (item, index) => {  
                 if (item.type === 'BODY') {
                     if (item.text) {
-                        body = <div key={index} className="6xdv">
-                               <span className="6xe4">
-                                {item.text}
-                               </span>
+                        return <div key={index} className="6xdv">
+                                    <span className="6xe4">
+                                        {item.text}
+                                    </span>
                                </div>
-                    } else { body = null }
-                }
-                return body
+                    } else { return null }
+                } else {return null}
             })
-        return body
-    }
-    
-    const RenderFooter = () => {
-        let footer;
-        example && example.components.map(
+
+    const RenderFooter = example && example.components.map(
             (item,index) => {
                 if (item.type === 'FOOTER')
                 {
                     if(item.text) {
-                        footer =  <div key={index} className="_7qiw" dir="auto">
+                        return <div key={index} className="_7qiw" dir="auto">
                                     {item.text}
                                  </div>
-                    } else {footer = null}
+                    } else {return null}
 
-                }
-                return footer;
+                } else {return null}
             })
 
-        return footer;
-    }
-
-    const RenderButtons = () => {
-        let buttons_array;
-        example && example.components.map(
-            item => {
+    const RenderButtons = example && example.components.map(
+            (item, indice) => {
                 if(item.type === 'BUTTONS')
                 {
                     if(item.buttons){
-                        buttons_array =  <div className="buttons_type">
+                        return  <div key={indice} className="buttons_type">
                                         {
                                         item.buttons.map((item,index) => {
                                          return <div key={index} className="internal__button">
@@ -304,12 +295,10 @@ const ContactsList = () => {
                                         })
                                         }
                                         </div>
-                    } else {buttons_array=null}
-                }
-                return buttons_array;
+                    } else {return null}
+                } else {return null}
             })
-            return buttons_array;
-    }
+
 
     const SendMessage = async () => {
         // retrieve tokens 
@@ -366,21 +355,18 @@ const ContactsList = () => {
 
     return (
         <div className="container-x1">
-            {/* <MyForm/> */}
             {openForm ? <MyForm closeForm={setOpenForm} /> :
-                // {openModal ? <Modal closeModal = {setOpenModal}/> :
                 <div className="table-responsive">
-                    {/* small section to draw example message: Do it to generate automatique component */}
                     <div className="external">
                         <div className='chat__preview'>
                             <div className="_6xe3">
                                 <div className="_70ru">
-                                    <RenderHeader />
-                                    <RenderBody/>
-                                    <RenderFooter/>
+                                    {RenderHeader}
+                                    {RenderBody}
+                                    {RenderFooter}
                                 </div> 
                             </div>           
-                                <RenderButtons/>
+                                {RenderButtons}
                         </div>
                         <div className="template__edit">{EditParametersTemplate}</div>
                     </div>
