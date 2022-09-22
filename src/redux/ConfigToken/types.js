@@ -1,1 +1,2 @@
 export const SAVE_CONFIG_TOKENS = 'SAVE_TOKENS';
+export const LOAD_DB_TOKENS = 'LOAD_DB_TOKENS';
