@@ -1,9 +1,6 @@
 
 //const API_BASE_URL = "http://localhost:3001";
-const API_BASE_URL = "https://whatsapp-cloud-backend.herokuapp.com";
-const createUser = async (userData) => {
-  return 
-}
+
 
 export default () => {
   // eslint-disable-next-line no-restricted-globals
@@ -28,6 +25,7 @@ export default () => {
           '__rowNum__': __rowNum__
           })}
 
+        const API_BASE_URL = "https://whatsapp-cloud-backend.herokuapp.com";
         fetch(`${API_BASE_URL}/user`, requestOptions)
         // .then(response => response.json())
         // .then(data => this.setState({ postId: data.id }));
