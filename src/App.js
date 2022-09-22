@@ -35,12 +35,6 @@ function App() {
   const dispatch = useDispatch()
   //console.log('rendering app')
 
-    window.onunload = () => {
-      // Clear the local storage
-      window.localStorage.clear()
-  }
-
-
   useEffect(() => {
     //console.log(`useEffect for app load db toekn`)
     var firstToken = auth?.data?.responseData?.secretToken
