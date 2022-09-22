@@ -397,8 +397,10 @@ const ContactsList = () => {
         const bsn_msg = {...initConvTemplate}
        
         // console.log(bsn_msg)
-        async function sendArrayMessage(obj) {
+        async function sendArrayMessage(item) {
             // edit template to send with different number
+            const obj = JSON.parse(item)
+            console.log(obj)
             bsn_msg['to'] = obj.Celular
             const msgReqData = {
                 name: obj.Nombres,
@@ -432,8 +434,8 @@ const ContactsList = () => {
             })
             //console.log(msgReqData)
         }
-        const newArr = JSON.parse(isChecked)
-        newArr.forEach(sendArrayMessage)
+  
+        isChecked.forEach(sendArrayMessage)
     }
 
     const handleEditClick = (event, contact) => {
