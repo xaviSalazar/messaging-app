@@ -1,6 +1,7 @@
 import Contacts from "./Contact";
 import './ContactsList.css'
-import { useState, useEffect } from "react";
+import { nanoid } from "nanoid";
+import { useState, useEffect, Fragment } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { getUsers } from '../redux/GetUsers/UsersAction';
@@ -12,6 +13,13 @@ import { Send } from "@material-ui/icons";
 import { AddCircleOutlineOutlined } from "@material-ui/icons";
 import reactStringReplace from 'react-string-replace';
 import { LoadFiles } from "../components/LoadFiles/LoadFiles";
+import {ImportCSV} from "../components/ContactsList/ImportCSV";
+import AddContact from "../components/ContactsList/AddContact";
+import {ExportCSV} from "../components/ContactsList/ExportCSV";
+import EditableRow from "../components/ContactsList/EditableRow";
+import ReadOnlyRow from "../components/ContactsList/ReadOnlyRow";
+import ReactPaginate from "react-paginate";
+import { createUser } from "../api";
 
 
 // template initial state
@@ -30,19 +38,96 @@ const initialState = {
     }
 }
 
+
 const ContactsList = () => {
+    const usersPerPage = 10;
+    const [pageNumber, setPageNumber] = useState(0);
     let auth = useSelector(state => state.customerReducer.auth)
     //const [openModal, setOpenModal] = useState(false)
     const [openForm, setOpenForm] = useState(false)
     // track checked items
     const [checked, setChecked] = useState([]);
     const contactsList = useSelector((state) => state.getUsers);
+    
     const [templates, setTemplates] = useState()
     const [example, setExample] = useState()
     const [initConvTemplate, setInitConvTemplate] = useState(initialState);
     const [detailTemplate, setDetailTemplate] = useState()
     const [file, setFile] = useState()
+    // contacts handle
+    const [contacts, setContacts] = useState([]);
+    const [importToggle, setImportToggle] = useState(false);
+    const [contactToggle, setContactToggle] = useState(false);
     const dispatch = useDispatch();
+    const [editContactId, setEditContactId] = useState(null);
+    const [checkAll, setCheckAll]=useState(false);
+    const [isChecked, setisChecked]= useState([]);
+
+
+    useEffect(() => {
+    
+      const newTranslation = contactsList.map(item => {
+        return {
+          'Asunto': item.asunto,
+          'Apellidos': item.lastname,
+          'Nombres': item.name,
+          'Lugar de Trabajo': item.workplace,
+          'Email': item.email,
+          'Celular': item.phoneNumber,
+          'Direccion': item.address,
+          'Notas': item.notes,
+          '__rowNum__': item.__rowNum__,
+          '_id': item._id
+          }
+      });
+
+      setContacts(newTranslation)
+
+    }, [contactsList])
+    const handleCancelClick = () => {
+        setEditContactId(null);
+      };
+
+      const handlecheckbox = (e)=>{
+        const {value, checked}= e.target;
+        if(checked)
+        {
+          setisChecked(value);
+        } else{
+  
+          setisChecked([]);
+        }
+      }
+
+      const pagesVisited = pageNumber * usersPerPage;
+      const pageCount = Math.ceil(contacts.length / usersPerPage);
+    
+      const changePage = ({ selected }) => {
+        setPageNumber(selected);
+      };
+    
+
+    const [addFormData, setAddFormData] = useState({
+        Asunto: "",
+        Apellidos: "",
+        Nombres: "",
+        'Lugar de Trabajo': "",
+        Email: "",
+        Celular: "",
+        Direccion: "",
+        Notas: "",
+      });
+
+      const [editFormData, setEditFormData] = useState({
+        Asunto: "",
+        Apellidos: "",
+        Nombres: "",
+        'Lugar de Trabajo': "",
+        Email: "",
+        Celular: "",
+        Direccion: "",
+        Notas: "",
+      });
 
     const buildBusinessPayload = (payload) => {
         const variable = {...initConvTemplate}
@@ -170,8 +255,8 @@ const ContactsList = () => {
             })
 
     useEffect(() => {
-        console.log("added file")
-        console.log(file)
+        // console.log("added file")
+        // console.log(file)
         // use lowercase here
         // handling other comp to send
         if(!detailTemplate) {return}
@@ -182,14 +267,14 @@ const ContactsList = () => {
             ? {...p, example: file.link} : p);
         example_template['components'] = new_example_template
         setDetailTemplate(example_template)
-        console.log(example_template)
+        // console.log(example_template)
 
         const variable = {...initConvTemplate}
         const new_comp = variable['template']['components'].map(p=> 
             p.type === "header" 
              ? {...p, parameters: [{type: file.format.toLowerCase(), [file.format.toLowerCase()]: {link: file.link}}]} : p );
         variable['template']['components'] = new_comp
-        console.log(variable)
+        // console.log(variable)
         setInitConvTemplate(variable)
     }, [file])
 
@@ -202,7 +287,7 @@ const ContactsList = () => {
         table[i] = value
         // save to memory 
         setNewState(table)
-        console.log(table)
+        // console.log(table)
         const nueva = table.filter(item => typeof item !== 'undefined').map((item, index) => (
             {type: "text", text:item} 
         ))
@@ -220,7 +305,7 @@ const ContactsList = () => {
             p.type==="BODY"
             ? {...p, text: text_joined} : p);
         example_template['components'] = new_example_template
-        console.log(example_template)
+        // console.log(example_template)
         setDetailTemplate(example_template)
         // setExample(example_template)
 
@@ -230,7 +315,7 @@ const ContactsList = () => {
              ? {...p, parameters: nueva} : p );
         older_template['template']['components'] = new_comp
         setInitConvTemplate(older_template)
-        console.log(older_template)
+        // console.log(older_template)
     }
 
     const EditParametersTemplate = example && example.components.map(
@@ -311,16 +396,16 @@ const ContactsList = () => {
         // treat the whole array with data
         const bsn_msg = {...initConvTemplate}
        
-        console.log(bsn_msg)
+        // console.log(bsn_msg)
         const sendArrayMessage = async (item) => {
             // array with list of recipients
             const obj = JSON.parse(item)
             // edit template to send with different number
-            bsn_msg['to'] = obj.phoneNumber
+            bsn_msg['to'] = obj.Celular
             const msgReqData = {
-                name: obj.name,
+                name: obj.Nombres,
                 from: numberId,
-                to: obj.phoneNumber,
+                to: obj.Celular,
                 type: "template",
                 template: bsn_msg,
                 components: detailTemplate.components,
@@ -329,11 +414,11 @@ const ContactsList = () => {
                 senderID: 0,
                 isRead: false,
             }
-            console.log(msgReqData)
+            // console.log(msgReqData)
             // create data in case to create a channel conversation
             const channelUsers = [{
-                name: obj.name,
-                phoneNumber: obj.phoneNumber,
+                name: obj.Nombres,
+                phoneNumber: obj.Celular,
                 userId: obj._id
             }, {
                 name: auth?.data?.responseData?.lastName,
@@ -349,86 +434,208 @@ const ContactsList = () => {
             })
             //console.log(msgReqData)
         }
-        checked.forEach(sendArrayMessage)
+        isChecked.forEach(sendArrayMessage)
     }
+
+    const handleEditClick = (event, contact) => {
+        event.preventDefault();
+        setEditContactId(contact.__rowNum__);
+        const formValues = {
+          Asunto: contact.Asunto,
+          Apellidos: contact.Apellidos,
+          Nombres: contact.Nombres,
+          'Lugar de Trabajo': contact['Lugar de Trabajo'],
+          Email: contact.Email,
+          Celular: contact.Celular,
+          Direccion: contact.Direccion,
+          Notas: contact.Notas,
+        };
+        setEditFormData(formValues);
+      };
+
+    const handleDeleteClick = (contactId) => {
+        console.log("row to be deleted", contactId)
+        const newContacts = [...contacts];
+    
+        const index = contacts.findIndex((contact) => contact.__rowNum__ === contactId);
+        console.log("row to be index", index)
+        newContacts.splice(index, 1);
+    
+        setContacts(newContacts);
+      };
+
+    const handleAddFormChange = (event) => {
+        event.preventDefault();    
+        const fieldName = event.target.getAttribute("name");
+        const fieldValue = event.target.value;
+    
+        const newFormData = { ...addFormData };
+        newFormData[fieldName] = fieldValue;
+    
+        setAddFormData(newFormData);
+      };
+
+      const handleEditFormChange = (event) => {
+        event.preventDefault();
+    
+        const fieldName = event.target.getAttribute("name");
+        const fieldValue = event.target.value;
+    
+        const newFormData = { ...editFormData };
+        newFormData[fieldName] = fieldValue;
+    
+        setEditFormData(newFormData);
+      };
+
+      const handleAddFormSubmit = async (event) => {
+        event.preventDefault();
+        const newContact = {
+          Asunto: addFormData.Asunto,
+          Apellidos: addFormData.Apellidos,
+          Nombres: addFormData.Nombres,
+          'Lugar de Trabajo': addFormData['Lugar de Trabajo'],
+          Email: addFormData.Email,
+          Celular: addFormData.Celular,
+          Direccion: addFormData.Direccion,
+          Notas: addFormData.Notas,
+          __rowNum__: contacts.length
+        };
+        const sendDatabase = {
+          'asunto': newContact.Asunto,
+          'lastname': newContact.Apellidos,
+          'name': newContact.Nombres,
+          'workplace': newContact['Lugar de Trabajo'],
+          'email': newContact.Email,
+          'phoneNumber': newContact.Celular,
+          'address': newContact.Direccion,
+          'notes': newContact.Notas,
+          'owner': auth?.data?.responseData?._id,
+          '__rowNum__': newContact.__rowNum__
+          }
+
+        await createUser(sendDatabase);
+        // add new contact in here
+        const newContacts = [...contacts, newContact];
+        setContacts(newContacts);
+        setContactToggle(false);
+      };
+
+      const handleEditFormSubmit = (event) => {
+        event.preventDefault();
+    
+        const editedContact = {
+          id: editContactId,
+          Asunto: editFormData.Asunto,
+          Apellidos: editFormData.Apellidos,
+          Nombres: editFormData.Nombres,
+          'Lugar de Trabajo': editFormData['Lugar de Trabajo'],
+          Email: editFormData.Email,
+          Celular: editFormData.Celular,
+          Direccion: editFormData.Direccion,
+          Notas: editFormData.Notas,
+        };
+    
+        const newContacts = [...contacts];
+    
+        const index = contacts.findIndex((contact) => contact.__rowNum__ === editContactId);
+    
+        newContacts[index] = editedContact;
+    
+        setContacts(newContacts);
+        setEditContactId(null);
+      };
 
 
     return (
+      
         <div className="container-x1">
-            {openForm ? <MyForm closeForm={setOpenForm} /> :
-                <div className="table-responsive">
-                    <div className="external">
-                        <div className='chat__preview'>
-                            <div className="_6xe3">
-                                <div className="_70ru">
-                                    {RenderHeader}
-                                    {RenderBody}
-                                    {RenderFooter}
-                                </div> 
-                            </div>           
-                                {RenderButtons}
-                        </div>
-                        <div className="template__edit">{EditParametersTemplate}</div>
-                    </div>
-                    {/* end small section to draw example message */}
-                    <div className="table-wrapper">
-                        <div className="table-title">
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <h2>Start your first Business Message</h2>
-                                </div>
-                                <br />
-                                <SelectionTemplate />
-                                <div className="col-sm-6">
-                                    <Button
-                                        //className="sendBtn"
-                                        variant="contained"
-                                        onClick={SendMessage}
-                                        startIcon={<Send />}
-                                    >
-                                        Start Message
-                                    </Button>
-                                    <Button
-                                        className="openModalBtn"
-                                        variant="contained"
-                                        onClick={() => { setOpenForm(true) }}
-                                        startIcon={<AddCircleOutlineOutlined />}
-                                    >
-                                        Add new contact
-                                    </Button>
-                                    {/* <a href="#addEmployeeModal" className="btn btn-success" data-toggle="modal">
-                                    <i className="material-icons">&#xE147;</i> 
-                                    <span>Add New Employee</span>
-                                </a> */}
-                                </div>
-                            </div>
-                        </div>
-                        <table className="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th><input value={"all"} type="checkbox" /></th>
-                                    <th>Nombres</th>
-                                    <th>Email</th>
-                                    {/*<th>Address</th> */}
-                                    <th>Telefono</th>
-                                    <th>Editar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    contactsList.map(contact => (
-                                        <tr key={contact._id}>
-                                            <td><input value={[`{"_id":"${contact._id}", "name": "${contact.name}", "phoneNumber":"${contact.phoneNumber}"}`]} type="checkbox" onChange={handleCheck} /></td>
-                                            <Contacts contact={contact} />
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            }
-        </div>
+            <div className="table-responsive">     
+            <div className="external">
+                         <div className='chat__preview'>
+                             <div className="_6xe3">
+                                 <div className="_70ru">
+                                     {RenderHeader}
+                                     {RenderBody}
+                                     {RenderFooter}
+                                 </div> 
+                             </div>           
+                                 {RenderButtons}
+                         </div>
+                         <div className="template__edit">{EditParametersTemplate}</div>
+              </div>
+            <SelectionTemplate />
+              <Button
+                  //className="sendBtn"
+                  variant="contained"
+                  onClick={SendMessage}
+                  startIcon={<Send />}
+              >
+                  Start Message
+              </Button>
+            <br/>
+            <button onClick={() => setContactToggle(!contactToggle)}>Add Contact</button>
+            <ExportCSV contacts={contacts} fileName="Exported Contacts" />
+            {!importToggle?  <button onClick={() => setImportToggle(!importToggle)}>Import</button>:
+            <button id="cancel" className="cancelBtn" onClick={() => setImportToggle(!importToggle)}>Cancel</button>}
+            {importToggle ? <ImportCSV setContacts={setContacts} setImportToggle={setImportToggle} /> : ""}
+            {contactToggle ? <AddContact handleAddFormChange={handleAddFormChange} handleAddFormSubmit={handleAddFormSubmit} setContactToggle={setContactToggle} /> : ""}
+            </div>
+            <form onSubmit={handleEditFormSubmit}>
+            <table id="table" className="table table-striped table-hover">
+             <thead>
+              <tr>
+              <th><input className="checkbox" type="checkbox" name="checkbox" value={JSON.stringify(contacts)} onClick={()=>setCheckAll(!checkAll)} checked={contacts.isChecked} onChange={(e)=>handlecheckbox(e)} /></th>
+              <th>Asunto</th>
+              <th>Apellidos</th>
+              <th>Nombres</th>
+              <th>Lugar de Trabajo</th>
+              <th>Email</th>
+              <th>Celular</th>
+              <th>Direccion</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody >
+            {contacts.slice(pagesVisited, pagesVisited + usersPerPage).map((contact, key) => (
+              <Fragment key={key}>
+                {editContactId === contact.__rowNum__ ? (
+                  <EditableRow
+                    editFormData={editFormData}
+                    handleEditFormChange={handleEditFormChange}
+                    handleCancelClick={handleCancelClick}
+                  />   
+                ) : (
+                  <ReadOnlyRow
+                    contact={contact}
+                    handleEditClick={handleEditClick}
+                    handleDeleteClick={handleDeleteClick}
+
+                    isChecked={isChecked} setisChecked={setisChecked}
+                      checkAll={checkAll} setCheckAll={setCheckAll}
+                  />
+                )}
+              </Fragment>  
+            ))}
+          </tbody>
+        </table>
+      </form>
+
+        {/* consoling the selected  */}
+            {/* {console.log(isChecked)} */}
+      <ReactPaginate
+        previousLabel={"Previous"}
+        nextLabel={"Next"}
+        pageCount={pageCount}
+        onPageChange={changePage}
+        containerClassName={"paginationBtns"}
+        previousLinkClassName={"previousBtn"}
+        nextLinkClassName={"nextBtn"}
+        disabledClassName={"paginationDisabled"}
+        activeClassName={"paginationActive"}
+      />
+    </div>
+
+        
     )
 }
 
