@@ -8,6 +8,7 @@
 
 .template__edit {
 	flex-direction: column;
+	max-width: 200px;
 }
 
 .internal__button {
@@ -108,7 +109,7 @@
 }
 
 ._7r3a {
-    background-image: url(https://static.xx.fbcdn.net/rsrc.php/v3/yL/r/NztUdBQHuX5.png);
+    /* background-image: url(https://static.xx.fbcdn.net/rsrc.php/v3/yL/r/NztUdBQHuX5.png); */
 	height: 200px;
 	width: 200px;
 }
@@ -292,3 +293,49 @@ table.table .avatar {
 .modal form label {
 	font-weight: normal;
 }	
+
+
+
+/* pagination  */
+
+.paginationBtns {
+	width: 80%;
+	height: 40px;
+	list-style: none;
+	display: flex;
+	justify-content: center;
+  }
+  
+  .paginationBtns a {
+	padding: 10px;
+	margin: 8px;
+	border-radius: 5px;
+	border: 1px solid #2b2eff;
+	color: #2b2eff;
+	cursor: pointer;
+  }
+  
+  .paginationBtns a:hover {
+	color: white;
+	background-color: #2b2eff;
+  }
+  
+  .paginationActive a {
+	color: white;
+	background-color: #2b2eff;
+  }
+  
+  .paginationDisabled a {
+	color: grey;
+	border: 1px solid gray;
+  }
+  
+  
+  .checkbox{
+	width: 20px;
+  }
+  
+  .cancelBtn{
+	background-color: rgb(235, 37, 37);
+	color: black;
+  }

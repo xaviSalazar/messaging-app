@@ -1,0 +1,33 @@
+.import {
+    border-radius: 10px;
+    padding: 1px;
+}
+
+.import-container {
+    display: flex;
+    align-items: center;
+}
+
+.import-container input {
+    margin: 0;
+    width: 200px;
+}
+
+.cancelBtn {
+    border: 1px solid red;
+    cursor: pointer;
+    padding: 8px;
+    width: 50px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+}
+
+.cancelBtn:hover {
+    color: white;
+    background-color: red;
+}
+
+.cancelBtn:active {
+    border: 1px solid red;
+}
