@@ -77,7 +77,8 @@ const ContactsList = () => {
           'Direccion': item.address,
           'Notas': item.notes,
           '__rowNum__': item.__rowNum__,
-          '_id': item._id
+          '_id': item._id,
+          'isChecked': false
           }
       });
 
@@ -88,16 +89,16 @@ const ContactsList = () => {
         setEditContactId(null);
       };
 
-      const handlecheckbox = (e)=>{
-        const {value, checked}= e.target;
-        if(checked)
-        {
-          setisChecked(value);
-        } else{
+      // const handlecheckbox = (e)=>{
+      //   const {value, checked}= e.target;
+      //   if(checked)
+      //   {
+      //     setisChecked(value);
+      //   } else{
   
-          setisChecked([]);
-        }
-      }
+      //     setisChecked([]);
+      //   }
+      // }
 
       const pagesVisited = pageNumber * usersPerPage;
       const pageCount = Math.ceil(contacts.length / usersPerPage);
@@ -585,7 +586,7 @@ const ContactsList = () => {
             <table id="table" className="table table-striped table-hover">
              <thead>
               <tr>
-              <th><input className="checkbox" type="checkbox" name="checkbox" value={JSON.stringify(contacts)} onClick={()=>setCheckAll(!checkAll)} checked={contacts.isChecked} onChange={(e)=>handlecheckbox(e)} /></th>
+              {/* <th><input className="checkbox" type="checkbox" name="checkbox" value={JSON.stringify(contacts)} onClick={()=>setCheckAll(!checkAll)} checked={contacts.isChecked} onChange={(e)=>handlecheckbox(e)} /></th> */}
               <th>Asunto</th>
               <th>Apellidos</th>
               <th>Nombres</th>
@@ -611,8 +612,10 @@ const ContactsList = () => {
                     handleEditClick={handleEditClick}
                     handleDeleteClick={handleDeleteClick}
 
-                    isChecked={isChecked} setisChecked={setisChecked}
-                      checkAll={checkAll} setCheckAll={setCheckAll}
+                    isChecked={isChecked} 
+                    setisChecked={setisChecked}
+                    checkAll={checkAll} 
+                    setCheckAll={setCheckAll}
                   />
                 )}
               </Fragment>  
@@ -622,7 +625,7 @@ const ContactsList = () => {
       </form>
 
         {/* consoling the selected  */}
-            {/* {console.log(isChecked)} */}
+            {console.log(isChecked)}
       <ReactPaginate
         previousLabel={"Previous"}
         nextLabel={"Next"}

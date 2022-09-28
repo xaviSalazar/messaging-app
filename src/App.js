@@ -15,6 +15,7 @@ import  {getWithExpiry} from'./managers/socketioManager'
 import { HashRouter } from 'react-router-dom'
 import {loadDbSavedTokens} from './redux/ConfigToken/Actions'
 import * as crypto from 'crypto-js';
+import Products from './pages/Products'
 
 socket.on("session", ({sessionID, userID}) => {
   // attach the session ID to the next reconnection attemps
@@ -100,6 +101,7 @@ function App() {
         <Route path = "/dashboard"element = {<Auth authRoute = {true} redirectTo="/login"> {auth?.data?.success?<MessagingPage socket ={ socket }/>:<Login/>} </Auth>} />
         <Route path = '/settings' element = {<Auth authRoute = {true} redirectTo="/login"> {auth?.data?.success?<Settings />:<Login/>}</Auth>} />
         <Route path = '/contacts' element = {<Auth authRoute = {true} redirectTo="/login"> {auth?.data?.success?<ContactsList/>:<Login/>}</Auth>} />
+        <Route path = '/products' element = {<Auth authRoute = {true} redirectTo="/login"> {auth?.data?.success?<Products/>:<Login/>}</Auth>} />
         <Route path = "/register" element = {<Auth redirectTo="/"> <Register/> </Auth>} />
       </Routes>
       </div>
