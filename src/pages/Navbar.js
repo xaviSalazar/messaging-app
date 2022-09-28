@@ -10,8 +10,7 @@ import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
 import {doCustomerLogout} from '../redux/Authentification/Actions'
 import { useDispatch } from "react-redux";
-
-
+import { PrintOutlined } from "@material-ui/icons";
 
 const Navbar = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -45,6 +44,7 @@ let auth = useSelector(state => state.customerReducer.auth)
                         <li><Link className={location.pathname === "/dashboard" ? "active": null} to= "/dashboard" ><ChatOutlined/> </Link></li>
                         <li><Link className={location.pathname === "/settings" ? "active": null} to= "/settings" ><SettingsOutlined/> </Link></li>
                         <li><Link className={location.pathname === "/contacts" ? "active": null} to= "/contacts" ><PersonOutlineOutlined/> </Link></li>
+                        <li><Link className={location.pathname === "/products" ? "active": null} to= "/products" ><PrintOutlined/> </Link></li>
                         <li>{auth?.data?.success?<> <Button 
                                                         onClick={handleClick}>
                                                         Account 

@@ -2,12 +2,16 @@ import { React,useState } from "react";
 const ReadOnlyRow = ({ contact, handleEditClick, handleDeleteClick,isChecked, setisChecked, checkAll}) => {
   // const [checkAll2, setCheckAll2]=useState(true);
   const handlecheckbox = (e)=>{
+
     const {value, checked}= e.target;
+
     if(checked)
     {
-      setisChecked([...isChecked, value]);
+      contact.isChecked = checked
+      setisChecked([...isChecked, value]); 
     } else{
-      setisChecked(isChecked.filter( (e)=>e!== value));
+      contact.isChecked = checked
+      setisChecked(isChecked.filter( (e) => JSON.parse(e)._id !== JSON.parse(value)._id)); 
     }
   }
   
