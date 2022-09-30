@@ -3,11 +3,9 @@ import { Avatar } from '@material-ui/core'
 import './SidebarChat.css'
 import { useDispatch } from 'react-redux';
 import { useSelector } from "react-redux";
-import { getMessagesFromChannel } from '../../../redux/GetMessages/Actions'
 //import { newIncomingMessage } from '../../../redux/NewMessages/Actions'
 import { MessageOutlined } from '@material-ui/icons';
 import { httpManager } from '../../../managers/httpManager.js';
-import { clearMessages } from '../../../redux/NewMessages/Actions'
 
 const filterMessages = (userMessages, userData, setUnreadMsg) => {
     //console.log(`new message im in sidebarchat :${JSON.stringify(userMessages)}`)
@@ -15,48 +13,20 @@ const filterMessages = (userMessages, userData, setUnreadMsg) => {
     var messagesToFilter = userMessages.filter( function(msg) {
         return msg.from === userData.phoneNumber
     });
-    console.log(JSON.stringify(messagesToFilter))
+    // console.log(JSON.stringify(messagesToFilter))
     var size = Object.keys(messagesToFilter).length;
-    console.log(size)
+    // console.log(size)
     if(size !== 0) {setUnreadMsg(size + userData.count)}
-    // var objet = messagesToFilter.pop();
-    // if(objet) {
-    // veamos.lastMessage = objet.message
-    // {objet.type === "text" ? veamos.lastMessage = objet.message : veamos.lastMessage = objet.type}
-    // const temporaire = {...veamos}
-    // const parametros = objet.message
-    // setArray([...array, parametros])
-    //console.log(temporaire)
 }
 
-
-// const findUnreadMessages = (newMessages, userData, setNotRead) => {
-//     var messagesToFilter = newMessages.filter( function(msg) {
-//         return msg.from === userData.phoneNumber
-//     });
-//     if(messagesToFilter.length === 0) return;
-
-//     var readStatusMessages = messagesToFilter.filter( function(msg) {
-//         return msg.isRead === false 
-//     })
-//     // Object.keys(myArray).length
-//     const counter = readStatusMessages.length;
-//     //console.log(`render unread messages`)
-//     setNotRead(counter)
-// }
 
 const SidebarChat = (props) => {
 
     const dispatch = useDispatch();
     // const userMessages  = useSelector((state) => state.getMessagesFromChannel);
     const newMessages = useSelector((state) => state.newIncomingMessage)
-    const memoizedValue = useMemo(()=>newMessages)
-    const [array, setArray] = useState([])
-    const { userData, setChat} = props;
-    const [ showInfo, setShowInfo ] = useState({})
-    const [ notRead, setNotRead ] = useState(0)
+    const { userData, setChat, idColumn, setSelectedActive, selectedActive} = props;
     const [unreadMsg, setUnreadMsg] = useState(userData.count)
-
     //console.log(`rendering SidebarChat ${userData.name}`)
 
     // useEffect( () => {
@@ -64,8 +34,11 @@ const SidebarChat = (props) => {
     // }, [])
 
     const setMessageAndChat = async () => {
+
+        const table = []
+        table[idColumn] = true;
+        setSelectedActive(table)
         console.log(`SETchat`)
-        setArray([])
         await httpManager.checkMsgToRead(userData._id)
         setChat(userData);
         setUnreadMsg(0)
@@ -86,8 +59,10 @@ const SidebarChat = (props) => {
         filterMessages(newMessages, userData, setUnreadMsg)
     }, [newMessages, userData, dispatch])
 
+
     return (
-        <div className = "sidebarChat" onClick = {setMessageAndChat}>
+        
+        <div className =  {selectedActive[idColumn] === true ? "sidebarChat__active":"sidebarChat"}  onClick = {setMessageAndChat}>
             <Avatar />
             <div className = "sidebarChat__info">
                 <h2>{userData.name}</h2>

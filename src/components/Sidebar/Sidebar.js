@@ -17,6 +17,7 @@ const Sidebar = (props) => {
     const dispatch = useDispatch();
     const [searchString, setSearchString] = useState("");
     const [socket, setSocket] = useState(props.socket)
+    const [selectedActive, setSelectedActive] = useState([])
     // use selectors
     const contactList  = useSelector((state) => state.getUsers);
     let auth = useSelector(state => state.customerReducer.auth)
@@ -83,11 +84,14 @@ const Sidebar = (props) => {
             <div className="sidebar__chats">
                 {
                     
-                    contactList.sort((a,b)=> b.lastMessage > a.lastMessage).map((userData, index) => (                 
-                        <SidebarChat 
+                    contactList.sort((a,b)=> b.lastMessage > a.lastMessage).map((userData, index) => (                    
+                        <SidebarChat   
                             key={index} 
+                            idColumn={index}
                             userData = {userData} 
                             setChat = {props.setChat}
+                            setSelectedActive = {setSelectedActive}
+                            selectedActive ={selectedActive}
                         />
                     ))
                 }
