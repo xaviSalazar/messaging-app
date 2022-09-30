@@ -29,8 +29,17 @@ const Sidebar = (props) => {
             dispatch(getUsers(auth?.data?.responseData?._id))
         };
         socket.on('new_user_contact', eventListener2);
+
+        const eventListener1 = ({ messages }) => {
+            //console.log("new user contact");  
+            dispatch(getUsers(auth?.data?.responseData?._id))
+        };
+        socket.on('user_answered', eventListener1);
+
+
         return () => {
             socket.off('new_user_contact') 
+            socket.off('user_answered') 
         }
 
     }, [socket, dispatch, auth?.data?.responseData?._id])
@@ -73,7 +82,8 @@ const Sidebar = (props) => {
             </div>
             <div className="sidebar__chats">
                 {
-                    contactList.map((userData, index) => (                 
+                    
+                    contactList.sort((a,b)=> b.lastMessage > a.lastMessage).map((userData, index) => (                 
                         <SidebarChat 
                             key={index} 
                             userData = {userData} 
